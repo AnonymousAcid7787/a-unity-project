@@ -1,70 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Entities;
-using Unity.Jobs;
 
-public class MaterialCache
+public class MaterialCache : MonoBehaviour
 {
-    public static List<RenderInfo> cachedRenderInfo;
-
-    public static RenderInfo CacheRenderInfo(Material material, Vector3 position, Quaternion rotation, Vector3 scale) {
-        if(cachedRenderInfo == null || cachedRenderInfo == default) {
-            cachedRenderInfo = new List<RenderInfo>();
-        }
-
-        int index = GetMaterialIndex(material);
-        if(index != -1) {
-            cachedRenderInfo[index].AddInstance(position, rotation, scale);
-            return cachedRenderInfo[index];
-        }
-
-        RenderInfo info = new RenderInfo(
-                material,
-                position, 
-                rotation, 
-                scale, 
-                new Bounds(Vector3.zero, new Vector3(10f,10f,10f))
-                );
-
-        cachedRenderInfo.Add(
-            info
-        );
-        return info;
+    public static List<RenderInfo> cachedRenderInfo = new List<RenderInfo>();
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
-    
-    public static void RemoveCachedRenderInfo(int index) {
-        if(cachedRenderInfo == null || cachedRenderInfo == default) {
-            cachedRenderInfo = new List<RenderInfo>();
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+    public static void CacheRenderInfo(Material material, Vector3 position, Quaternion rotation, Vector3 scale, Bounds bounds) {
+        if(material == null || position == null || rotation == null || scale == null || bounds == null)
             return;
-        }
-        cachedRenderInfo.RemoveAt(index);
-        new IndexUpdaterJob{
-            indexDeleted = index
-        }.Run();
-    }
 
-    public static int GetMaterialIndex(Material material) {
-        if(cachedRenderInfo == null || cachedRenderInfo == default) {
-            cachedRenderInfo = new List<RenderInfo>();
-        }
-
+        //If material is cached, then add new instance to cached material and return.
         for(var i=0; i<cachedRenderInfo.Count; i++) {
             RenderInfo info = cachedRenderInfo[i];
-            if(info.material == material) {
-                return i;
+            if(info.material.mainTexture == material.mainTexture || info.material == material) {
+                info.AddInstance(position,rotation,scale,1);
+                return;
             }
         }
-        return -1;
-    } 
-
-}
-
-public partial struct IndexUpdaterJob : IJobEntity {
-    public int indexDeleted;
-    public void Execute(RenderComponent component) {
-        if(component.materialIndex > indexDeleted) {
-            component.materialIndex--;
-        }
+        //If not cached, then cache the material
+        cachedRenderInfo.Add(new RenderInfo(
+            material,
+            position,rotation,scale,
+            bounds
+        ));
     }
 }

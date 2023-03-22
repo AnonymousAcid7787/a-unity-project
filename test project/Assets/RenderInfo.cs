@@ -18,6 +18,7 @@ public class RenderInfo
         this.renderBounds = renderBounds;
         matrices = new List<Matrix4x4>();
         AddInstance(position, rotation, scale, 1);
+        this.material = material;
     }
 
     private void UpdateMatrixArray() {

@@ -10,8 +10,6 @@ public partial class DrawingSystem : SystemBase
     {
         foreach(RenderComponent component in SystemAPI.Query<RenderComponent>()) {
             RenderInfo info = MaterialCache.cachedRenderInfo[component.materialIndex];
-            if(info.material == null)
-                continue;
             Graphics.DrawMeshInstancedIndirect(
                 info.mesh,0,
                 info.material,
