@@ -7,6 +7,7 @@ public partial class PlayerSpawnerSystem : SystemBase
 {
     protected override void OnUpdate()
     {
+        return;
         EntityQuery playerEntityQuery = EntityManager.CreateEntityQuery(typeof(PlayerTag));
 
         PlayerSpawnerComponent spawner = SystemAPI.GetSingleton<PlayerSpawnerComponent>();

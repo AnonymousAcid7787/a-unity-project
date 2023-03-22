@@ -6,15 +6,52 @@ using Unity.Mathematics;
 public class RenderInfo 
 {
     public Material material;
-    public float3 position;
-    public Quaternion rotation;
     public Mesh mesh;
+    public ComputeBuffer argsBuf;
+    public List<Matrix4x4> matrices;
+    private Matrix4x4[] matrixArray;
+    private uint instanceCount = 0;
+    public Bounds renderBounds;
 
-    public RenderInfo(Material material, float3 position, Quaternion rotation) {
-        this.material = material;
-        this.position = position;
+    public RenderInfo(Material material, Vector3 position, Quaternion rotation, Vector3 scale, Bounds renderBounds) {
         mesh = QuadMesh();
-        this.rotation = rotation;
+        this.renderBounds = renderBounds;
+        matrices = new List<Matrix4x4>();
+        AddInstance(position, rotation, scale, 1);
+    }
+
+    private void UpdateMatrixArray() {
+        matrixArray = matrices.ToArray();
+    }
+
+    public void AddInstance(Vector3 position, Quaternion rotation, Vector3 scale, int count = 1) {
+        for(var i=0; i<count; i++) 
+            matrices.Add(Matrix4x4.TRS(position, rotation, scale));
+
+        instanceCount += (uint)count;
+        
+        //Free previous memory
+        if(argsBuf != null && argsBuf.IsValid()) {
+            argsBuf.Release();
+        }
+        
+        argsBuf = new ComputeBuffer(1, 5*sizeof(uint), ComputeBufferType.IndirectArguments);
+        argsBuf.SetData(
+            new uint[] {
+                mesh.GetIndexCount(0),
+                instanceCount,
+                mesh.GetIndexStart(0),
+                mesh.GetBaseVertex(0),
+                0,
+            }
+        );
+
+        UpdateMatrixArray();
+    }
+
+    public void DestroyBuffers() {
+        argsBuf.Release();
+        argsBuf = null;
     }
 
     public static Mesh QuadMesh() {
