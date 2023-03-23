@@ -9,7 +9,7 @@ public class RenderInfo
     public Mesh mesh;
     public ComputeBuffer argsBuf;
     public List<Matrix4x4> matrices;
-    private Matrix4x4[] matrixArray;
+    public ComputeBuffer matricesBuffer;
     private uint instanceCount = 0;
     public Bounds renderBounds;
 
@@ -18,11 +18,14 @@ public class RenderInfo
         this.renderBounds = renderBounds;
         matrices = new List<Matrix4x4>();
         AddInstance(position, rotation, scale, 1);
+        matricesBuffer = new ComputeBuffer(matrices.Count, sizeof(float) * (4*4));
         this.material = material;
     }
 
-    private void UpdateMatrixArray() {
-        matrixArray = matrices.ToArray();
+    private void UpdateMatricesBuffer() {
+        matricesBuffer = new ComputeBuffer(matrices.Count, sizeof(float) * (4*4));
+        matricesBuffer.SetData(matrices);
+        material.SetBuffer("matricesBuffer", matricesBuffer);
     }
 
     public void AddInstance(Vector3 position, Quaternion rotation, Vector3 scale, int count = 1) {
@@ -47,7 +50,7 @@ public class RenderInfo
             }
         );
 
-        UpdateMatrixArray();
+        UpdateMatricesBuffer();
     }
 
     public void DestroyBuffers() {

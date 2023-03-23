@@ -315,6 +315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1342802924}
   - component: {fileID: 1342802925}
+  - component: {fileID: 1342802926}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -344,7 +345,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1342802921}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 940717a8ff09e6946908d8b89114e570, type: 3}
   m_Name: 
@@ -362,3 +363,17 @@ MonoBehaviour:
   - {fileID: -1970629533, guid: ebfc4ffe74418214187d3c205ea8f447, type: 3}
   - {fileID: -66482299, guid: ebfc4ffe74418214187d3c205ea8f447, type: 3}
   baseMaterial: {fileID: 2100000, guid: 7941d55fdca6cec4fa9f58750b8d2b5d, type: 2}
+--- !u!114 &1342802926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342802921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c2e83f436042ff4ba407ada73f3adef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprite: {fileID: -1189332666, guid: ebfc4ffe74418214187d3c205ea8f447, type: 3}
+  material: {fileID: 0}

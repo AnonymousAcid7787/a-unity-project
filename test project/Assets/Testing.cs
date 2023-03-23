@@ -16,7 +16,7 @@ public class Testing : MonoBehaviour
         for(var i=0; i<sprites.Length; i++) {
             Sprite s = sprites[i];
             //Make new material for mesh
-            Material spriteMaterial = new Material(baseMaterial); /*this is messing smth up*/
+            Material spriteMaterial = Instantiate(baseMaterial); /*this is messing smth up*/
             spriteMaterial.mainTexture = s.texture;
             
             Vector3 pos = gameObject.transform.position+new Vector3(0, 0.1f*i, 0);
