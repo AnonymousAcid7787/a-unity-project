@@ -16,7 +16,6 @@ public partial class DrawingSystem : SystemBase
                 info.renderBounds,
                 info.argsBuf
             );
-
         }
     }
 

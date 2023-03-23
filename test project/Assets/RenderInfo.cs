@@ -9,21 +9,20 @@ public class RenderInfo
     public Mesh mesh;
     public ComputeBuffer argsBuf;
     public List<Matrix4x4> matrices;
-    public ComputeBuffer matricesBuffer;
     private uint instanceCount = 0;
     public Bounds renderBounds;
 
     public RenderInfo(Material material, Vector3 position, Quaternion rotation, Vector3 scale, Bounds renderBounds) {
         mesh = QuadMesh();
         this.renderBounds = renderBounds;
+        this.material = material;
+
         matrices = new List<Matrix4x4>();
         AddInstance(position, rotation, scale, 1);
-        matricesBuffer = new ComputeBuffer(matrices.Count, sizeof(float) * (4*4));
-        this.material = material;
     }
 
     private void UpdateMatricesBuffer() {
-        matricesBuffer = new ComputeBuffer(matrices.Count, sizeof(float) * (4*4));
+        ComputeBuffer matricesBuffer = new ComputeBuffer(matrices.Count, sizeof(float) * (4*4));
         matricesBuffer.SetData(matrices);
         material.SetBuffer("matricesBuffer", matricesBuffer);
     }

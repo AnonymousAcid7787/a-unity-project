@@ -18,8 +18,9 @@ public class DrawingTest : MonoBehaviour
         bounds = new Bounds(Vector3.zero, new Vector3(10, 10, 10));
         mesh = RenderInfo.QuadMesh();
         matrices = new List<Matrix4x4>();
+        
 
-        matrices.Add(Matrix4x4.TRS(transform.position, transform.rotation, transform.localScale));
+        matrices.Add(Matrix4x4.TRS(transform.position+new Vector3(-01924,129402,9340), transform.rotation, new Vector3(1,1,1)));
         ComputeBuffer matricesBuffer = new ComputeBuffer(1, sizeof(float) * 4*4);
         matricesBuffer.SetData(matrices);
         material = new Material(Shader.Find("Unlit/Transparent"));
