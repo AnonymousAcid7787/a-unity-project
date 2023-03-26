@@ -40,7 +40,7 @@ inline void SetUnityMatrices(uint instanceID, inout float4x4 objectToWorld, inou
 {
 #if UNITY_ANY_INSTANCING_ENABLED
     DrawData drawData = _DrawData[instanceID];
-  
+    
     objectToWorld = mul(objectToWorld, TRSMatrix(drawData.position, drawData.rotation, drawData.scale));
 
     float3x3 w2oRotation;

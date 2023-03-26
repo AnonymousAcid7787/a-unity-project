@@ -352,7 +352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteSheet: {fileID: 1145871094, guid: db560833d1711ff43a861fb904edb3f8, type: 3}
   textures: []
-  baseMaterial: {fileID: 2100000, guid: 7941d55fdca6cec4fa9f58750b8d2b5d, type: 2}
+  baseMaterial: {fileID: 2100000, guid: cefed909599371d469bcfbae6bd7a487, type: 2}
 --- !u!114 &1342802926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,5 +366,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 2365a7015cc73c64990a8e6010b91df0, type: 3}
-  material: {fileID: 2100000, guid: 7941d55fdca6cec4fa9f58750b8d2b5d, type: 2}
+  material: {fileID: 2100000, guid: 73e07132c77350a459942a865b361b71, type: 2}
   mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
