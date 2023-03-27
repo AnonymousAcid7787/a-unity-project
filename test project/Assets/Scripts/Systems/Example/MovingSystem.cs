@@ -18,21 +18,21 @@ public partial struct MovingSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        return;
-        RefRW<RandomComponent> randomComponent = SystemAPI.GetSingletonRW<RandomComponent>();
-
-        float deltaTime = SystemAPI.Time.DeltaTime;
         
-        //Move entities
-        JobHandle handle = new MoveJob {
-            deltaTime = deltaTime
-        }.ScheduleParallel(state.Dependency);
+        // RefRW<RandomComponent> randomComponent = SystemAPI.GetSingletonRW<RandomComponent>();
 
-        handle.Complete();
-        //Once done moving them, check if they reached their destination. if they did, then move set another random position as the target
-        new TestReachedPositionJob {
-            randomComponent = randomComponent
-        }.Run();
+        // float deltaTime = SystemAPI.Time.DeltaTime;
+        
+        // //Move entities
+        // JobHandle handle = new MoveJob {
+        //     deltaTime = deltaTime
+        // }.ScheduleParallel(state.Dependency);
+
+        // handle.Complete();
+        // //Once done moving them, check if they reached their destination. if they did, then move set another random position as the target
+        // new TestReachedPositionJob {
+        //     randomComponent = randomComponent
+        // }.Run();
     }
 
 }

@@ -17,28 +17,17 @@ public class DrawingTest : MonoBehaviour
     private Bounds bounds;
     private List<InstanceData> instanceData;
 
-    struct InstanceData {
-        public float4x4 worldMatrix;
-        public float4x4 worldMatrixInverse;
-
-        public static int Size() {
-            return sizeof(float) * 4 * 4
-				+ sizeof(float) * 4 * 4;
-        }
-    }
-
     // Start is called before the first frame update
     void Start()
     {
         material = new Material(material);
-        mesh = RenderInfo.QuadMesh();
         material.mainTexture = sprite.texture;
         instanceData = new List<InstanceData>();
         propertyBlock = new MaterialPropertyBlock();
         bounds = new Bounds(Vector3.zero, Vector3.one*10);
 
         //Transform matrices
-        for(var i=0; i<1000; i++) {
+        for(var i=0; i<3800; i++) {
             Vector3 offset = new Vector3(
                 UnityEngine.Random.Range(-1f, 1f),
                 UnityEngine.Random.Range(-1f, 1f),
