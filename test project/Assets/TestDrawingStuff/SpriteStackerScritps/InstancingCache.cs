@@ -10,7 +10,6 @@ public class InstancingCache
 
     public static DrawDataComponent CacheSpriteEntity(
         Material material, Mesh mesh,
-        Entity baseEntity,
         Vector3 positionOffset,
         Vector3 scale,
         Bounds renderBounds
@@ -33,7 +32,6 @@ public class InstancingCache
                     cacheIndex = i,
                     positionOffset = positionOffset,
                     instanceDataIndex = drawData.instanceData.Count-1,
-                    baseEntity = baseEntity,
                     scale = scale
                 };
                 return component;
@@ -49,7 +47,6 @@ public class InstancingCache
             cacheIndex = cache.Count-1,
             positionOffset = positionOffset,
             instanceDataIndex = data.instanceData.Count-1,
-            baseEntity = baseEntity,
             scale = scale
         };
         return component;

@@ -1,23 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Mathematics;
 using Unity.Entities;
-using Unity.Transforms;
 
-public class SpriteStacker : MonoBehaviour
+public class SpriteStackAuth : MonoBehaviour
 {
     public Sprite spriteSheet;
     public Material baseMaterial;
-    public List<Texture2D> textures;
-
-    public List<Entity> spriteEntities;
-
-
-    void Update() {
-        transform.Translate(new Vector3(0.01f, 0, 0));
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
 
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+    
     public static List<Texture2D> GetSlicedSpriteTextures(Sprite sprite)
     {
         List<Texture2D> textures = new List<Texture2D>();
@@ -46,42 +47,26 @@ public class SpriteStacker : MonoBehaviour
     }
 }
 
-public class SpriteStackerBaker : Baker<SpriteStacker>
+public class SpriteStackBaker : Baker<SpriteStackAuth>
 {
-    public override void Bake(SpriteStacker authoring)
+    public override void Bake(SpriteStackAuth authoring)
     {
+        List<Texture2D> textures = SpriteStackAuth.GetSlicedSpriteTextures(authoring.spriteSheet);
 
-
-        authoring.spriteEntities = new List<Entity>();
-
-        List<Texture2D> textures = SpriteStacker.GetSlicedSpriteTextures(authoring.spriteSheet);
-            textures.Reverse();
-
-        EntityManager eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        EntityArchetype archetype = eManager.CreateArchetype(typeof(DrawDataComponent));
-        
-        Bounds bounds = new Bounds(Vector3.zero, new Vector3(10, 10, 10));
-        
         for(var i=0; i<textures.Count; i++) {
             Texture2D tex = textures[i];
-
-            Vector3 offset = new Vector3(0, 0.05f*i, 0);
-            
             Material material = new Material(authoring.baseMaterial);
-                material.mainTexture = tex;
+            material.mainTexture = tex;
 
-            DrawDataComponent component = InstancingCache.CacheSpriteEntity(
+            Vector3 offset = new Vector3(0, i*0.1f, 0);
+
+            InstancingCache.CacheSpriteEntity(
                 material,
                 DrawData.NewQuadMesh(),
                 offset,
                 Vector3.one,
-                bounds
-            );
-            
-            Entity spriteEntity = eManager.CreateEntity(archetype);
-            eManager.SetComponentData(spriteEntity, component);
-
-            authoring.spriteEntities.Add(spriteEntity);
+                new Bounds(Vector3.zero, Vector3.one*10)
+            )
         }
     }
 }
