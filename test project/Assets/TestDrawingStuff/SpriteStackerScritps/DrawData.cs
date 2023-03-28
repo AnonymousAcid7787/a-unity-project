@@ -7,10 +7,11 @@ public class DrawData
     public Material material;
     public Mesh mesh;
     public MaterialPropertyBlock mpb;
-    public List<InstanceData> instanceData;
+    public List<InstanceDataClass> instanceDataObjs;
     public Bounds renderBounds;
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
     public int layer;
+    public bool receiveShadows;
 
     private uint[] args;
     private ComputeBuffer argsBuffer;
@@ -25,16 +26,19 @@ public class DrawData
         this.mesh = mesh;
         this.mpb = mpb;
         this.renderBounds = renderBounds;
-        instanceData = new List<InstanceData>();
+        instanceDataObjs = new List<InstanceDataClass>();
         shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         layer = 0;
+        receiveShadows = true;
     }
 
-    public InstanceData AddInstance(Vector3 position, Quaternion rotation, Vector3 scale) {
-        InstanceData data = new InstanceData();
-            data.worldMatrix = Matrix4x4.TRS(position, rotation, scale);
-            data.worldMatrixInverse = Matrix4x4.Inverse(data.worldMatrix);
-        instanceData.Add(data);
+    public InstanceDataClass AddInstance(Vector3 position, Quaternion rotation, Vector3 scale) {
+        Matrix4x4 worldMatrix = Matrix4x4.TRS(position, rotation, scale);
+        InstanceDataClass data = new InstanceDataClass(
+            worldMatrix,
+            Matrix4x4.Inverse(worldMatrix)
+        );
+        instanceDataObjs.Add(data);
 
         UpdateBuffers();
         UpdateMaterialBuffer();
@@ -50,7 +54,7 @@ public class DrawData
             material, renderBounds,
             argsBuffer, 0,
             mpb,
-            shadowCastingMode, true,
+            shadowCastingMode, receiveShadows,
             layer
         );
     }
@@ -59,8 +63,12 @@ public class DrawData
         instancesBuffer?.Release();
 
         //Instance buffer
-        instancesBuffer = new ComputeBuffer(instanceData.Count, InstanceData.Size());
-        instancesBuffer.SetData(instanceData.ToArray());
+        InstanceDataStruct[] instanceDataStructs = new InstanceDataStruct[instanceDataObjs.Count];
+        for(var i=0; i<instanceDataObjs.Count; i++) {
+            instanceDataStructs[i] = instanceDataObjs[i].bufferStruct;
+        }
+        instancesBuffer = new ComputeBuffer(instanceDataObjs.Count, InstanceDataStruct.Size());
+        instancesBuffer.SetData(instanceDataStructs);
 
         SetupArgsBuffer();
     }
@@ -73,7 +81,7 @@ public class DrawData
 
         args = new uint[] { 
             mesh.GetIndexCount(0),
-            (uint)instanceData.Count,
+            (uint)instanceDataObjs.Count,
             mesh.GetIndexStart(0),
             mesh.GetBaseVertex(0),
             0,

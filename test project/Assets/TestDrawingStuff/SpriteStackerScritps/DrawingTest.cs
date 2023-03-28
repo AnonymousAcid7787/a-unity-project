@@ -15,14 +15,14 @@ public class DrawingTest : MonoBehaviour
     private MaterialPropertyBlock propertyBlock;
     private uint[] args;
     private Bounds bounds;
-    private List<InstanceData> instanceData;
+    private List<InstanceDataClass> instanceData;
 
     // Start is called before the first frame update
     void Start()
     {
         material = new Material(material);
         material.mainTexture = sprite.texture;
-        instanceData = new List<InstanceData>();
+        instanceData = new List<InstanceDataClass>();
         propertyBlock = new MaterialPropertyBlock();
         bounds = new Bounds(Vector3.zero, Vector3.one*10);
 
@@ -33,9 +33,8 @@ public class DrawingTest : MonoBehaviour
                 UnityEngine.Random.Range(-1f, 1f),
                 UnityEngine.Random.Range(-1f, 1f)
             );
-            InstanceData data = new InstanceData();
-            data.worldMatrix = Matrix4x4.TRS(transform.position+offset, transform.rotation, Vector3.one);
-            data.worldMatrixInverse = Matrix4x4.Inverse(data.worldMatrix);
+            Matrix4x4 worldMatrix = Matrix4x4.TRS(transform.position+offset, transform.rotation, Vector3.one);
+            InstanceDataClass data = new InstanceDataClass(worldMatrix, Matrix4x4.Inverse(worldMatrix));
             instanceData.Add(data);
         }
 
@@ -63,7 +62,7 @@ public class DrawingTest : MonoBehaviour
     public void UpdateBuffers() {
         
         //Instance buffer
-        instancesBuffer = new ComputeBuffer(instanceData.Count, InstanceData.Size());
+        instancesBuffer = new ComputeBuffer(instanceData.Count, InstanceDataStruct.Size());
         instancesBuffer.SetData(instanceData.ToArray());
 
         SetupArgsBuffer();

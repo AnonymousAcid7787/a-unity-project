@@ -7,9 +7,8 @@ using Unity.Transforms;
 
 public partial struct DrawDataComponent : IComponentData
 {
-    public int cacheIndex;
+    public int drawDataCacheIndex;
     public int instanceDataIndex;
-    public Entity baseEntity;
 
     public float3 positionOffset;
     public float3 scale;

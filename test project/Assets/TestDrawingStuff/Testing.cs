@@ -12,7 +12,7 @@ public class Testing : MonoBehaviour
     public Material baseMaterial;
 
     private DrawData data;
-    private InstanceData instanceData;
+    private InstanceDataClass instanceData;
 
     void Start() {
         data = new DrawData(new Material(baseMaterial), DrawData.NewQuadMesh(), new MaterialPropertyBlock(), new Bounds(Vector3.zero, Vector3.one*10));
@@ -32,7 +32,7 @@ public class Testing : MonoBehaviour
     public void UpdateInstanceData() {
         instanceData.worldMatrix = Matrix4x4.TRS(transform.position, transform.rotation, Vector3.one);
         instanceData.worldMatrixInverse = Matrix4x4.Inverse(instanceData.worldMatrix);
-        data.instanceData[0] = instanceData;
+        data.instanceDataObjs[0] = instanceData;
         data.UpdateBuffers();
         data.UpdateMaterialBuffer();
     }

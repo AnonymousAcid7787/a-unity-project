@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1342802924}
   - component: {fileID: 1342802925}
+  - component: {fileID: 1342802926}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -162,7 +163,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1342802921}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 84aaaf30291601f41a7a2d973618396f, type: 3}
   m_Name: 
@@ -170,3 +171,19 @@ MonoBehaviour:
   spriteSheet: {fileID: 719073491, guid: f0cb777d56365a44bb0dfce45e80c563, type: 3}
   baseMaterial: {fileID: 2100000, guid: 73e07132c77350a459942a865b361b71, type: 2}
   textures: []
+--- !u!114 &1342802926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342802921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69150588af7ee93429bb9f94721eb71f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteSheet: {fileID: -1189332666, guid: ebfc4ffe74418214187d3c205ea8f447, type: 3}
+  baseMaterial: {fileID: 2100000, guid: 73e07132c77350a459942a865b361b71, type: 2}
+  shadowCastingMode: 0
+  recieveShadows: 1
