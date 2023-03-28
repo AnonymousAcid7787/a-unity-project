@@ -6,6 +6,7 @@ using Unity.Jobs;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Collections;
+using Unity.Burst;
 using Unity.Collections.LowLevel.Unsafe;
 
 public partial struct DrawingSystem : ISystem
@@ -23,8 +24,15 @@ public partial struct DrawingSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         EntityManager eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+        float deltaTime = SystemAPI.Time.DeltaTime;
+        JobHandle handle = new TestJob{
+            deltaTime = deltaTime
+        }.ScheduleParallel(state.Dependency);
+        handle.Complete();
+
         //update draw positions based on offsets
-        JobHandle handle = new UpdateDrawPositionsJob {}.ScheduleParallel(state.Dependency);
+        handle = new UpdateDrawPositionsJob {}.ScheduleParallel(state.Dependency);
         handle.Complete();
 
         //after that, draw.
@@ -42,28 +50,12 @@ public partial struct DrawingSystem : ISystem
     }
 }
 
-public partial class TestSystem : SystemBase
+public partial struct TestJob : IJobEntity
 {
-    protected override void OnUpdate()
-    {
-        Entities.ForEach((ref LocalTransform localTransform) => {
-            // localTransform.Position += new Unity.Mathematics.float3(SystemAPI.Time.DeltaTime, 0, 0);
-            localTransform.Rotation = 
-                math.mul(localTransform.Rotation, quaternion.RotateZ(math.radians(SystemAPI.Time.DeltaTime*50)));
-                // Unity.Mathematics.quaternion.EulerXYZ(new Unity.Mathematics.float3 {
-                //     x = localTransform.Rotation.value.x,
-                //     y = localTransform.Rotation.value.y,
-                //     z = localTransform.Rotation.value.z+0.1f,
-                // });
-            
-        }).Run();
-        // foreach(LocalTransform localTransform in SystemAPI.Query<LocalTransform>()) {
-        //     Unity.Mathematics.quaternion q = Unity.Mathematics.quaternion.EulerXYZ(new Unity.Mathematics.float3 {
-        //             x = 1,
-        //             y = 0,
-        //             z = 0,
-        //         });
-        // }
+    public float deltaTime;
+    public void Execute(ref LocalTransform localTransform) {
+        localTransform.Rotation = 
+                math.mul(localTransform.Rotation, quaternion.RotateZ(math.radians(deltaTime*50)));
     }
 }
 

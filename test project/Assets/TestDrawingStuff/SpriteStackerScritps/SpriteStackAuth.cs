@@ -16,40 +16,6 @@ public class SpriteStackAuth : MonoBehaviour
 
     private InstanceDataClass instanceDataObj;
     private DrawData data;
-
-    // public void Start() {
-    //     Material material = new Material(baseMaterial);
-    //     material.mainTexture = spriteSheet.texture;
-    //     data = new DrawData(
-    //         material, DrawData.NewQuadMesh(),
-    //         new MaterialPropertyBlock(), 
-    //         new Bounds(Vector3.zero, new Vector3(10,10,10))
-    //     );
-
-    //     instanceDataObj = data.AddInstance(
-    //         transform.position,
-    //         transform.rotation,
-    //         Vector3.one
-    //     );
-    // }
-
-    // public void Update() {
-    //     Vector3 position = new Vector3(
-    //         UnityEngine.Random.Range(-1f, 1f),
-    //         UnityEngine.Random.Range(-1f, 1f),
-    //         UnityEngine.Random.Range(-1f, 1f)
-    //     );
-
-    //     instanceDataObj.worldMatrix = 
-    //         Matrix4x4.TRS(position, transform.rotation, Vector3.one);
-    //     instanceDataObj.worldMatrixInverse = 
-    //         Matrix4x4.Inverse(instanceDataObj.worldMatrix);
-        
-    //     data.UpdateBuffers();
-    //     data.UpdateMaterialBuffer();
-
-    //     data.Draw();
-    // }
     
     public static List<Texture2D> GetSlicedSpriteTextures(Sprite sprite)
     {
