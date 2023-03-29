@@ -11,33 +11,27 @@ public class TestAuth : MonoBehaviour
     public Material material;
     public Sprite sprite;
 
-    private EntityManager entityManager;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-}
+    void Start() {
+        material = new Material(material);
+        material.mainTexture = sprite.texture;
 
-
-public class TestBaker : Baker<TestAuth>
-{
-    public override void Bake(TestAuth authoring)
-    {
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         Entity entity = entityManager.CreateEntity(
             typeof(RenderMesh),
             typeof(RenderBounds),
-            typeof(LocalToWorld)
+            typeof(LocalTransform)
         );
 
-        entityManager.SetComponentData(entity, new LocalToWorld {
-            Value = Matrix4x4.TRS(authoring.transform.position, authoring.transform.rotation, Vector3.one)
+        entityManager.SetComponentData(entity, new LocalTransform {
+            _Position = transform.position,
+            _Scale = 1,
+            _Rotation = transform.rotation
         });
 
+
         entityManager.SetSharedComponentManaged(entity, new RenderMesh {
-            mesh = authoring.mesh,
-            material = authoring.material
+            mesh = mesh,
+            material = material
         });
         
         entityManager.SetComponentData(entity, new RenderBounds {
