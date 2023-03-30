@@ -4,41 +4,50 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
+using Unity.Collections;
 
 public class TestAuth : MonoBehaviour
 {
-    public Mesh mesh;
-    public Material material;
-    public Sprite sprite;
+    public Material baseMaterial;
+    public Sprite spriteSheet;
+}
 
-    void Start() {
-        material = new Material(material);
-        material.mainTexture = sprite.texture;
-
+public class TestBaker : Baker<TestAuth>
+{
+    public override void Bake(TestAuth authoring)
+    {
+        NativeList<Entity> spriteEntities = new NativeList<Entity>(Allocator.Persistent);
+        List<Texture2D> textures = SpriteUtils.GetSlicedSpriteTextures(authoring.spriteSheet);/*get slices*/
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        Entity entity = entityManager.CreateEntity(
-            typeof(RenderMesh),
-            typeof(RenderBounds),
-            typeof(LocalTransform)
-        );
 
-        entityManager.SetComponentData(entity, new LocalTransform {
-            _Position = transform.position,
-            _Scale = 1,
-            _Rotation = transform.rotation
-        });
+        for(var i=0; i<textures.Count; i++) {
+            Texture2D tex = textures[i];
+            Material material = new Material(authoring.baseMaterial);/*new material with slice's texture*/
 
+            Entity entity = entityManager.CreateEntity(typeof(SpriteComponent));/*sprite entity*/
 
-        entityManager.SetSharedComponentManaged(entity, new RenderMesh {
-            mesh = mesh,
-            material = material
-        });
-        
-        entityManager.SetComponentData(entity, new RenderBounds {
-            Value = new Unity.Mathematics.AABB {
-                Center = Vector3.zero,
-                Extents = new Vector3(10,10,10)
-            }
+            Matrix4x4 worldMatrix = Matrix4x4.TRS(/*transform of sprite (will update every frame)*/
+                authoring.transform.position,
+                authoring.transform.rotation,
+                Vector3.one
+            );
+
+            InstanceDataObject instanceData = new InstanceDataObject(
+                worldMatrix,
+                Matrix4x4.Inverse(worldMatrix)
+            );
+
+            int materialCacheIndex = RenderCache.CacheInfo(material, RenderInfo.NewQuadMesh(), instanceData);
+
+            entityManager.SetComponentData(entity, new SpriteComponent {
+                materialCacheIndex = materialCacheIndex,
+                instanceData = instanceData
+            });
+            spriteEntities.Add(entity);
+        }
+
+        AddComponent(new SpriteStack {
+            spriteEntities = spriteEntities
         });
     }
 }
