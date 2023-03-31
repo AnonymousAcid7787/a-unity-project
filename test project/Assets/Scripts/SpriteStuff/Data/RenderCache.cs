@@ -6,7 +6,7 @@ public class RenderCache
 {
     public static List<RenderInfo> renderCache = new List<RenderInfo>();
 
-    public static int CacheInfo(Material material, Mesh mesh, InstanceDataObject instanceData) {
+    public static int CacheInfo(Material material, Mesh mesh, InstanceData instanceData) {
         for(var i=0; i<renderCache.Count; i++) {
             RenderInfo cached = renderCache[i];
             if(cached.material.mainTexture == material.mainTexture) {

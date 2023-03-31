@@ -9,15 +9,15 @@ public class RenderInfo
 
     public ComputeBuffer argsBuffer;
     public ComputeBuffer instancesBuffer;
-    public List<InstanceDataObject> instanceDatas;
+    public List<InstanceData> instanceDatas;
 
     public RenderInfo(Material material, Mesh mesh) {
         this.material = material;
         this.mesh = mesh;
-        instanceDatas = new List<InstanceDataObject>();
+        instanceDatas = new List<InstanceData>();
     }
 
-    public void AddInstance(InstanceDataObject instanceData) {
+    public void AddInstance(InstanceData instanceData) {
         instanceDatas.Add(instanceData);
         UpdateBuffers();
     }
@@ -26,12 +26,8 @@ public class RenderInfo
         instancesBuffer?.Release();
 
         instancesBuffer = new ComputeBuffer(instanceDatas.Count, InstanceData.Size());
-        InstanceData[] datas = new InstanceData[instanceDatas.Count];
-        for(var i=0; i<instanceDatas.Count; i++) {
-            datas[i] = instanceDatas[i].instanceDataStruct;
-        }
         
-        instancesBuffer.SetData(datas);
+        instancesBuffer.SetData(instanceDatas);
     }
 
     public void UpdateMaterialBuffer() {

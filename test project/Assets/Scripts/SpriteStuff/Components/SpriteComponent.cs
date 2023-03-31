@@ -5,9 +5,10 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Collections;
 
-public class SpriteComponent : IComponentData
+public struct SpriteComponent : IComponentData
 {
-    public InstanceDataObject instanceData;
+    public InstanceData instanceData;
+    public Entity parentEntity;
     // public float4 color;
     public int materialCacheIndex;
 }

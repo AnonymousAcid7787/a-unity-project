@@ -19,6 +19,7 @@ public class TestBaker : Baker<TestAuth>
         NativeList<Entity> spriteEntities = new NativeList<Entity>(Allocator.Persistent);
         List<Texture2D> textures = SpriteUtils.GetSlicedSpriteTextures(authoring.spriteSheet);/*get slices*/
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        Entity thisEntity = GetEntityWithoutDependency();
 
         for(var i=0; i<textures.Count; i++) {
             Texture2D tex = textures[i];
@@ -32,16 +33,17 @@ public class TestBaker : Baker<TestAuth>
                 Vector3.one
             );
 
-            InstanceDataObject instanceData = new InstanceDataObject(
-                worldMatrix,
-                Matrix4x4.Inverse(worldMatrix)
-            );
+            InstanceData instanceData = new InstanceData{
+                worldMatrix = worldMatrix,
+                worldMatrixInverse = Matrix4x4.Inverse(worldMatrix)
+            };
 
             int materialCacheIndex = RenderCache.CacheInfo(material, RenderInfo.NewQuadMesh(), instanceData);
 
             entityManager.SetComponentData(entity, new SpriteComponent {
                 materialCacheIndex = materialCacheIndex,
-                instanceData = instanceData
+                instanceData = instanceData,
+                parentEntity = thisEntity
             });
             spriteEntities.Add(entity);
         }
