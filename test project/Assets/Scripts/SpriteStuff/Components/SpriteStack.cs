@@ -7,4 +7,5 @@ using Unity.Collections;
 public struct SpriteStack : IComponentData
 {
     public NativeList<Entity> spriteEntities;
+    public bool updatedParentEntity;
 }
