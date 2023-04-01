@@ -71,6 +71,20 @@ public class RenderInfo
         material.SetBuffer("_PerInstanceData", instancesBuffer);
     }
 
+    public void UpdateArgsBuffer() {
+        argsBuffer?.Release();
+
+        argsBuffer = new ComputeBuffer(1, sizeof(uint)*5, ComputeBufferType.IndirectArguments);
+        argsBuffer.SetData(new uint[] {
+            mesh.GetIndexCount(0),
+            (uint)instanceDatas.Count,
+            mesh.GetIndexStart(0),
+            mesh.GetBaseVertex(0),
+            0
+        });
+    }
+
+
     public void Draw() {
         Graphics.DrawMeshInstancedIndirect(
             mesh, 0,
@@ -81,19 +95,6 @@ public class RenderInfo
             shadowCastingMode,
             recieveShadows
         );
-    }
-
-    public void UpdateArgsBuffer() {
-        argsBuffer?.Release();
-
-        argsBuffer = new ComputeBuffer(1, sizeof(uint)*5);
-        argsBuffer.SetData(new uint[] {
-            mesh.GetIndexCount(0),
-            (uint)instanceDatas.Count,
-            mesh.GetIndexStart(0),
-            mesh.GetBaseVertex(0),
-            0
-        });
     }
 
     public static Mesh NewQuadMesh() {

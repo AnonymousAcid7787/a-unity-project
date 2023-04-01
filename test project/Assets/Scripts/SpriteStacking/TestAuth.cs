@@ -38,13 +38,14 @@ public class TestBaker : Baker<TestAuth>
                 int instanceDataIndex = info.AddInstance(instanceData);
 
             Entity entity = CreateAdditionalEntity( /*sprite entity*/
-                entityName: authoring.gameObject.name+"_sprite"+i.ToString()
+                entityName: authoring.gameObject.name+"_sprite"+i.ToString(),
+                transformUsageFlags: TransformUsageFlags.ReadGlobalTransform
             );
             AddComponent(entity, new SpriteComponent {
                 renderCacheIndex = materialCacheIndex,
                 instanceData = instanceData,
                 instanceDataIndex = instanceDataIndex,
-                positionOffset = new float3(0, 0.05f*i, 0),
+                positionOffset = new float3(0, -0.01f*i, 0),
                 scale = new float3(1,1,1),
             });
             spriteStack.spriteEntities.Add(entity);
