@@ -8,6 +8,9 @@ using Unity.Collections;
 public struct SpriteComponent : IComponentData
 {
     public InstanceData instanceData;
+    public float3 positionOffset;
+    public float3 scale;
+
     // public float4 color;
-    public int materialCacheIndex;
+    public int renderCacheIndex;
 }

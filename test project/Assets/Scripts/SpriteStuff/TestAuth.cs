@@ -5,6 +5,7 @@ using Unity.Entities;
 using Unity.Rendering;
 using Unity.Transforms;
 using Unity.Collections;
+using Unity.Mathematics;
 
 public class TestAuth : MonoBehaviour
 {
@@ -38,8 +39,10 @@ public class TestBaker : Baker<TestAuth>
                 entityName: authoring.gameObject.name+"_sprite"+i.ToString()
             );
             AddComponent(entity, new SpriteComponent {
-                materialCacheIndex = materialCacheIndex,
+                renderCacheIndex = materialCacheIndex,
                 instanceData = instanceData,
+                positionOffset = new float3(0, 0.05f*i, 0),
+                scale = new float3(1,1,1),
             });
             spriteStack.spriteEntities.Add(entity);
         }

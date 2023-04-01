@@ -4,41 +4,42 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Jobs;
-using Unity.Collections;
-using Unity.Mathematics;
+using Unity.Burst;
 
-public partial struct DrawSystem : ISystem
+[BurstCompile]
+public partial struct DrawPositionSystem : ISystem
 {
-    private ComponentLookup<LocalTransform> lookup;
+    
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
-        lookup = state.GetComponentLookup<LocalTransform>(false);
+        
     }
-
+    
+    [BurstCompile]
     public void OnDestroy(ref SystemState state)
     {
         
     }
-
+    
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        lookup.Update(ref state);
-
-        JobHandle handle = new UpdateDrawPositions{
-            lookup = lookup
-        }.ScheduleParallel(state.Dependency);
+        JobHandle handle = new UpdateDrawPositions{}.ScheduleParallel(state.Dependency);
         handle.Complete();
-
     }
 }
 
 
-public partial struct UpdateDrawPositions : IJobEntity {
-    [ReadOnly]
-    public ComponentLookup<LocalTransform> lookup;
-    public void Execute(ref SpriteComponent spriteComponent, ref LocalToWorld localToWorld) {
-        spriteComponent.instanceData.worldMatrix = localToWorld.Value;
-        spriteComponent.instanceData.worldMatrixInverse = Matrix4x4.Inverse(localToWorld.Value);
+[BurstCompile]
+public partial struct UpdateDrawPositions : IJobEntity {    
+    [BurstCompile]
+    public void Execute(ref SpriteComponent spriteComponent, ref LocalTransform localTransform) {
+        spriteComponent.instanceData.worldMatrix = Matrix4x4.TRS(
+            localTransform._Position + spriteComponent.positionOffset,
+            localTransform._Rotation,
+            spriteComponent.scale
+        );
+        spriteComponent.instanceData.worldMatrixInverse = Matrix4x4.Inverse(spriteComponent.instanceData.worldMatrix);
     }
 }

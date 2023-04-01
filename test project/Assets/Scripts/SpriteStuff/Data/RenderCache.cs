@@ -10,7 +10,7 @@ public class RenderCache
         for(var i=0; i<renderCache.Count; i++) {
             RenderInfo cached = renderCache[i];
             if(cached.material == null) {
-                renderCache.Remove(cached);
+                renderCache.RemoveAt(i);
                 continue;
             }
             if(cached.material.mainTexture == material.mainTexture) {
