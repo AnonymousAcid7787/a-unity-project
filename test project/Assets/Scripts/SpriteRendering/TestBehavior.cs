@@ -24,9 +24,9 @@ public class TestBaker : Baker<TestBehavior>
 
         int instanceDataHash = drawInfo.AddInstance(new InstanceData {
             worldMatrix = Matrix4x4.zero,
-            worldMatrixInverse = Matrix4x4.zero,
-            uvOffset = Vector2.zero,
-            uvTiling = Vector2.one
+            worldMatrixInverse = Matrix4x4.Inverse(Matrix4x4.zero),
+            // uvOffset = Vector2.zero,
+            // uvTiling = Vector2.one
         });
 
         Entity entity = CreateAdditionalEntity(entityName: authoring.name + "_sprite");
@@ -36,18 +36,7 @@ public class TestBaker : Baker<TestBehavior>
             currentFrame = 0,
             frameCount = sprites.Length,
             frameTimer = 0f,
-            frameTimerMax = .1f
+            frameTimerMax = .5f
         });
-
-        int test1 = new InstanceData{}.GetHashCode();
-        int test2 = new InstanceData{
-            worldMatrix = Matrix4x4.TRS(
-                Vector3.one,
-                Quaternion.identity,
-                Vector3.one
-            )
-        }.GetHashCode();
-        Debug.Log(test1);
-        Debug.Log(test2);
     }
 }

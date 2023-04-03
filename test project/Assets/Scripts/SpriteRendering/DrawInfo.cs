@@ -9,7 +9,7 @@ public class SpriteSheetDrawInfo
 
     public ComputeBuffer argsBuffer;
     public ComputeBuffer instancesBuffer;
-    public Dictionary<int, InstanceData> instanceDatas;
+    public List<InstanceData> instanceDatas;
     public Bounds renderBounds;
     public MaterialPropertyBlock materialPropertyBlock;
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
@@ -22,7 +22,7 @@ public class SpriteSheetDrawInfo
         materialPropertyBlock = new MaterialPropertyBlock();
         shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         recieveShadows = true;
-        instanceDatas = new Dictionary<int, InstanceData>(0);
+        instanceDatas = new List<InstanceData>();
     }
 
     public SpriteSheetDrawInfo(RenderArgs args) {
@@ -32,15 +32,12 @@ public class SpriteSheetDrawInfo
         this.recieveShadows = args.recieveShadows;
         this.renderBounds = args.renderBounds;
         this.shadowCastingMode = args.shadowCastingMode;
-        this.instanceDatas = new Dictionary<int, InstanceData>(0);
+        this.instanceDatas = new List<InstanceData>();
     }
 
     public int AddInstance(InstanceData data) {
-        if(instanceDatas.ContainsKey(data.GetHashCode()))
-            return data.GetHashCode();
-        
-        instanceDatas.Add(data.GetHashCode(), data);
-        return data.GetHashCode();
+        instanceDatas.Add(data);
+        return instanceDatas.Count-1;
     }
 
     public void UpdateAllBuffers() {
@@ -53,7 +50,7 @@ public class SpriteSheetDrawInfo
         instancesBuffer?.Release();
 
         instancesBuffer = new ComputeBuffer(instanceDatas.Count, InstanceData.Size());
-        instancesBuffer.SetData(new List<InstanceData>(instanceDatas.Values));
+        instancesBuffer.SetData(instanceDatas);
     }
 
     public void UpdateArgsBuffer() {
