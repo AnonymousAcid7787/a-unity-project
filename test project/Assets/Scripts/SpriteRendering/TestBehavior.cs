@@ -38,5 +38,16 @@ public class TestBaker : Baker<TestBehavior>
             frameTimer = 0f,
             frameTimerMax = .1f
         });
+
+        int test1 = new InstanceData{}.GetHashCode();
+        int test2 = new InstanceData{
+            worldMatrix = Matrix4x4.TRS(
+                Vector3.one,
+                Quaternion.identity,
+                Vector3.one
+            )
+        }.GetHashCode();
+        Debug.Log(test1);
+        Debug.Log(test2);
     }
 }
