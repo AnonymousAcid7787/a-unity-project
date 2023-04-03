@@ -153,7 +153,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1342802925
 MonoBehaviour:
@@ -164,11 +164,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1342802921}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a711827a47d78d4468acfb2967098b8a, type: 3}
+  m_Script: {fileID: 11500000, guid: 27fba1347f1d95c4381b082fe0a060c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseMaterial: {fileID: 2100000, guid: 73e07132c77350a459942a865b361b71, type: 2}
-  spriteSheet: {fileID: 719073491, guid: f0cb777d56365a44bb0dfce45e80c563, type: 3}
+  spriteMaterial: {fileID: 2100000, guid: cac25f799df279042aaf10d8556924f7, type: 2}
+  mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1884537408
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +199,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1884537410
 MonoBehaviour:
