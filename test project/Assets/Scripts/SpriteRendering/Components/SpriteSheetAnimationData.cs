@@ -10,5 +10,5 @@ public struct SpriteSheetAnimationData : IComponentData {
     public float frameTimerMax;
 
     public int drawInfoHashCode;
-    public int instanceDataHash;
+    public int instanceDataIndex;
 }

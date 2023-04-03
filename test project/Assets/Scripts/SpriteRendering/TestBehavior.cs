@@ -22,9 +22,9 @@ public class TestBaker : Baker<TestBehavior>
             new MaterialPropertyBlock()
         ));
 
-        int instanceDataHash = drawInfo.AddInstance(new InstanceData {
-            worldMatrix = Matrix4x4.zero,
-            worldMatrixInverse = Matrix4x4.Inverse(Matrix4x4.zero),
+        int instanceDataIndex = drawInfo.AddInstance(new InstanceData {
+            worldMatrix = authoring.transform.localToWorldMatrix,
+            worldMatrixInverse = Matrix4x4.Inverse(authoring.transform.localToWorldMatrix)
             // uvOffset = Vector2.zero,
             // uvTiling = Vector2.one
         });
@@ -32,7 +32,7 @@ public class TestBaker : Baker<TestBehavior>
         Entity entity = CreateAdditionalEntity(entityName: authoring.name + "_sprite");
         AddComponent(entity, new SpriteSheetAnimationData {
             drawInfoHashCode = drawInfo.GetHashCode(),
-            instanceDataHash = instanceDataHash,
+            instanceDataIndex = instanceDataIndex,
             currentFrame = 0,
             frameCount = sprites.Length,
             frameTimer = 0f,

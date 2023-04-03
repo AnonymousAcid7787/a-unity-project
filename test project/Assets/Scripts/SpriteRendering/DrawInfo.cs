@@ -9,11 +9,12 @@ public class SpriteSheetDrawInfo
 
     public ComputeBuffer argsBuffer;
     public ComputeBuffer instancesBuffer;
-    public List<InstanceData> instanceDatas;
+    public Dictionary<int, InstanceData> instanceDatas;
     public Bounds renderBounds;
     public MaterialPropertyBlock materialPropertyBlock;
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
     public bool recieveShadows;
+    public int frameCount;
 
     public SpriteSheetDrawInfo(Material material, Mesh mesh, Bounds renderBounds) {
         this.spriteSheetMaterial = material;
@@ -22,7 +23,7 @@ public class SpriteSheetDrawInfo
         materialPropertyBlock = new MaterialPropertyBlock();
         shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         recieveShadows = true;
-        instanceDatas = new List<InstanceData>();
+        instanceDatas = new Dictionary<int, InstanceData>();
     }
 
     public SpriteSheetDrawInfo(RenderArgs args) {
@@ -32,12 +33,24 @@ public class SpriteSheetDrawInfo
         this.recieveShadows = args.recieveShadows;
         this.renderBounds = args.renderBounds;
         this.shadowCastingMode = args.shadowCastingMode;
-        this.instanceDatas = new List<InstanceData>();
+        this.instanceDatas = new Dictionary<int, InstanceData>();
     }
 
     public int AddInstance(InstanceData data) {
-        instanceDatas.Add(data);
-        return instanceDatas.Count-1;
+        int num = Random.Range(int.MinValue, int.MaxValue);
+        while(instanceDatas.ContainsKey(num))
+            num = Random.Range(int.MinValue, int.MaxValue);
+        
+        instanceDatas.Add(num, data);
+        return num;
+    }
+
+    public InstanceData RemoveInstance(int key) {
+        InstanceData data = instanceDatas[key];
+
+        instanceDatas.Remove(key);
+
+        return data;
     }
 
     public void UpdateAllBuffers() {
@@ -50,7 +63,7 @@ public class SpriteSheetDrawInfo
         instancesBuffer?.Release();
 
         instancesBuffer = new ComputeBuffer(instanceDatas.Count, InstanceData.Size());
-        instancesBuffer.SetData(instanceDatas);
+        instancesBuffer.SetData(new List<InstanceData>(instanceDatas.Values));
     }
 
     public void UpdateArgsBuffer() {

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SpriteMaterialLit
+  m_Name: Cars
   m_Shader: {fileID: -6465566751694194690, guid: 9ba6a0cd82a88dc4bb132ea3f7e31d63, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
