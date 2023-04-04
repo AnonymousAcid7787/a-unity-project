@@ -35,9 +35,9 @@ public class TestBaker : Baker<TestBehavior>
 
         int instanceDataIndex = drawInfo.AddInstance(new InstanceData {
             worldMatrix = matrix,
-            worldMatrixInverse = Matrix4x4.Inverse(matrix)
-            // uvOffset = Vector2.zero,
-            // uvTiling = Vector2.one
+            worldMatrixInverse = Matrix4x4.Inverse(matrix),
+            uvOffset = Vector2.one*UnityEngine.Random.Range(0f, 1f),
+            uvTiling = Vector2.one
         });
 
         Entity entity = CreateAdditionalEntity(entityName: authoring.name + "_sprite");
