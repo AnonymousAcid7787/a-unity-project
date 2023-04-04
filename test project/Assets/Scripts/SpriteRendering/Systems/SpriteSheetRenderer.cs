@@ -6,6 +6,10 @@ using Unity.Entities;
 [UpdateAfter(typeof(SpriteSheetAnimationSystem))]
 public partial class SpriteSheetRenderer : SystemBase
 {
+    protected override void OnCreate()
+    {
+        
+    }
     protected override void OnUpdate()
     {
         foreach(SpriteSheetAnimationData data in SystemAPI.Query<SpriteSheetAnimationData>()) {

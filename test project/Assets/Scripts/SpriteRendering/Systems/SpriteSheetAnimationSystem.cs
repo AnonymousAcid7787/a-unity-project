@@ -8,11 +8,14 @@ using Unity.Burst;
 [BurstCompile]
 public partial struct SpriteSheetAnimationSystem : ISystem
 {
-    [BurstCompile]
-    public void OnCreate(ref SystemState state) {}
+    public void OnCreate(ref SystemState state) {
+        SpriteSheetCache.cache = new Dictionary<int, SpriteSheetDrawInfo>();
+        SpriteSheetCache.cachedSpriteSheets = new Dictionary<Texture, Sprite[]>();
+    }
 
-    [BurstCompile]
-    public void OnDestroy(ref SystemState state) {}
+    public void OnDestroy(ref SystemState state) {
+        SpriteSheetCache.ClearCache();
+    }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)

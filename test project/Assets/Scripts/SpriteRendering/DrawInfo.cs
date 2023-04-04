@@ -83,6 +83,11 @@ public class SpriteSheetDrawInfo
         spriteSheetMaterial.SetBuffer("_PerInstanceData", instancesBuffer);
     }
 
+    public void DestroyBuffers() {
+        argsBuffer?.Release();
+        instancesBuffer?.Release();
+    }
+
     public void Draw() {
         if(instanceDatas.Count == 0)
             return;

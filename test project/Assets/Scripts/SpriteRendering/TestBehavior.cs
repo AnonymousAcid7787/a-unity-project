@@ -21,10 +21,21 @@ public class TestBaker : Baker<TestBehavior>
             new Bounds(Vector3.zero, new Vector3(10, 10, 10)),
             new MaterialPropertyBlock()
         ));
+        Vector3 pos = new Vector3(
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f),
+            0
+        );
+
+        Matrix4x4 matrix = Matrix4x4.TRS(
+            pos,
+            Quaternion.identity,
+            Vector3.one
+        );
 
         int instanceDataIndex = drawInfo.AddInstance(new InstanceData {
-            worldMatrix = authoring.transform.localToWorldMatrix,
-            worldMatrixInverse = Matrix4x4.Inverse(authoring.transform.localToWorldMatrix)
+            worldMatrix = matrix,
+            worldMatrixInverse = Matrix4x4.Inverse(matrix)
             // uvOffset = Vector2.zero,
             // uvTiling = Vector2.one
         });

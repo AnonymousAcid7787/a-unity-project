@@ -21,4 +21,10 @@ public class SpriteSheetCache
         cache.Add(drawInfo.GetHashCode(), drawInfo);
         return drawInfo;
     }
+
+    public static void ClearCache() {
+        foreach(KeyValuePair<int, SpriteSheetDrawInfo> cachedInfo in cache) {
+            cachedInfo.Value.DestroyBuffers();
+        }
+    }
 }
