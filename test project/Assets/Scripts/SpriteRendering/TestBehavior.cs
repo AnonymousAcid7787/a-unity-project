@@ -21,32 +21,32 @@ public class TestBaker : Baker<TestBehavior>
             new Bounds(Vector3.zero, new Vector3(10, 10, 10)),
             new MaterialPropertyBlock()
         ));
-        for(var i=0; i<5; i++) {
-            Vector3 pos = new Vector3(
-                Random.Range(-1f, 1f),
-                Random.Range(-1f, 1f),
-                0
-            );
-            Matrix4x4 matrix = Matrix4x4.TRS(
-                pos,
-                Quaternion.identity,
-                Vector3.one
-            );
-            int instanceDataIndex = drawInfo.AddInstance(new InstanceData {
-                worldMatrix = matrix,
-                worldMatrixInverse = Matrix4x4.Inverse(matrix),
-                uvTiling = Vector2.one,
-                uvOffset = Vector2.zero,
-            });
-            Entity entity = CreateAdditionalEntity(entityName: authoring.name + "_sprite");
-            AddComponent(entity, new SpriteSheetAnimationData {
-                drawInfoHashCode = drawInfo.GetHashCode(),
-                instanceDataIndex = instanceDataIndex,
-                currentFrame = 0,
-                frameCount = sprites.Length,
-                frameTimer = 0f,
-                frameTimerMax = .5f
-            });
-        }
+
+        Vector3 pos = new Vector3(
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f),
+            0
+        );
+        Matrix4x4 matrix = Matrix4x4.TRS(
+            pos,
+            Quaternion.identity,
+            Vector3.one
+        );
+        
+        int instanceDataIndex = drawInfo.AddInstance(new InstanceData {
+            worldMatrix = matrix,
+            worldMatrixInverse = Matrix4x4.Inverse(matrix),
+            uvTiling = Vector2.one,
+            uvOffset = Vector2.zero,
+        });
+
+        AddComponent(new SpriteSheetAnimationData {
+            drawInfoHashCode = drawInfo.GetHashCode(),
+            instanceDataIndex = instanceDataIndex,
+            currentFrame = 0,
+            frameCount = sprites.Length,
+            frameTimer = 0f,
+            frameTimerMax = .5f
+        });
     }
 }
