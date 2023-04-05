@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
 
 public class SpriteSheetDrawInfo
@@ -9,12 +10,13 @@ public class SpriteSheetDrawInfo
 
     public ComputeBuffer argsBuffer;
     public ComputeBuffer instancesBuffer;
-    public Dictionary<int, InstanceData> instanceDatas;
+    public List<Entity> instances;
     public Bounds renderBounds;
     public MaterialPropertyBlock materialPropertyBlock;
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
     public bool recieveShadows;
     public int frameCount;
+    private EntityManager entityManager;
 
     public SpriteSheetDrawInfo(Material material, Mesh mesh, Bounds renderBounds) {
         this.spriteSheetMaterial = material;
@@ -23,7 +25,9 @@ public class SpriteSheetDrawInfo
         materialPropertyBlock = new MaterialPropertyBlock();
         shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         recieveShadows = true;
-        instanceDatas = new Dictionary<int, InstanceData>();
+        instances = new List<Entity>();
+
+        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
 
     public SpriteSheetDrawInfo(RenderArgs args) {
@@ -33,24 +37,14 @@ public class SpriteSheetDrawInfo
         this.recieveShadows = args.recieveShadows;
         this.renderBounds = args.renderBounds;
         this.shadowCastingMode = args.shadowCastingMode;
-        this.instanceDatas = new Dictionary<int, InstanceData>();
+        this.instances = new List<Entity>();
+
+        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
 
-    public int AddInstance(InstanceData data) {
-        int num = Random.Range(int.MinValue, int.MaxValue);
-        while(instanceDatas.ContainsKey(num))
-            num = Random.Range(int.MinValue, int.MaxValue);
-        
-        instanceDatas.Add(num, data);
-        return num;
-    }
+    public void RemoveInstance(Entity entityContainingInstanceData) {
 
-    public InstanceData RemoveInstance(int key) {
-        InstanceData data = instanceDatas[key];
-
-        instanceDatas.Remove(key);
-
-        return data;
+        instances.Remove(entityContainingInstanceData);
     }
 
     public void UpdateAllBuffers() {
@@ -62,8 +56,18 @@ public class SpriteSheetDrawInfo
     public void UpdateInstancesBuffer() {
         instancesBuffer?.Release();
 
-        instancesBuffer = new ComputeBuffer(instanceDatas.Count, InstanceData.Size());
-        instancesBuffer.SetData(new List<InstanceData>(instanceDatas.Values));
+        instancesBuffer = new ComputeBuffer(instances.Count, InstanceData.Size());
+
+        List<InstanceData> instanceData = new List<InstanceData>();
+        foreach(Entity entity in instances) {
+            SpriteSheetAnimationData data = entityManager.GetComponentData<SpriteSheetAnimationData>(entity);
+            instanceData.Add(data.instanceData);
+        }
+        instancesBuffer.SetData(instanceData);
+    }
+
+    public void TestThing<T>() where T : unmanaged {
+
     }
 
     public void UpdateArgsBuffer() {
@@ -72,7 +76,7 @@ public class SpriteSheetDrawInfo
         argsBuffer = new ComputeBuffer(1, sizeof(uint)*5, ComputeBufferType.IndirectArguments);
         argsBuffer.SetData(new uint[] {
             mesh.GetIndexCount(0),
-            (uint)instanceDatas.Count,
+            (uint)instances.Count,
             mesh.GetIndexStart(0),
             mesh.GetBaseVertex(0),
             0
@@ -89,7 +93,7 @@ public class SpriteSheetDrawInfo
     }
 
     public void Draw() {
-        if(instanceDatas.Count == 0)
+        if(instances.Count == 0)
             return;
         UpdateAllBuffers();
 
