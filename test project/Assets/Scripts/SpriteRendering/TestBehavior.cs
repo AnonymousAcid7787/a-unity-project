@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
@@ -14,9 +15,9 @@ public class TestBaker : Baker<TestBehavior>
 {
     public override void Bake(TestBehavior authoring)
     {
-        Sprite[] sprites = Resources.LoadAll<Sprite>(authoring.spriteMaterial.mainTexture.name);
+        KeyValuePair<Texture, Sprite[]> pair = SpriteSheetCache.CacheSpriteSheet(authoring.spriteMaterial.mainTexture);
 
-        SpriteSheetDrawInfo drawInfo = SpriteSheetCache.CacheSpriteSheet(new RenderArgs(
+        SpriteSheetDrawInfo drawInfo = SpriteSheetCache.CacheSpriteSheetDrawInfo(new RenderArgs(
             authoring.spriteMaterial, authoring.mesh,
             new Bounds(Vector3.zero, new Vector3(10, 10, 10)),
             new MaterialPropertyBlock()
@@ -34,12 +35,14 @@ public class TestBaker : Baker<TestBehavior>
             Vector3.one
         );
 
+        Rect[] uvRectsArray = SpriteUtils.GetSpriteSheetUVs(pair.Key, pair.Value);
+
         EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         Entity spriteEntity = entityManager.CreateEntity(typeof(SpriteSheetAnimationData));
         entityManager.SetComponentData(spriteEntity, new SpriteSheetAnimationData {
             drawInfoHashCode = hashCode,
             currentFrame = 0,
-            frameCount = sprites.Length,
+            frameCount = pair.Value.Length,
             frameTimer = 0f,
             frameTimerMax = .5f,
             instanceData = new InstanceData {
@@ -47,9 +50,11 @@ public class TestBaker : Baker<TestBehavior>
                 worldMatrixInverse = Matrix4x4.Inverse(matrix),
                 uvTiling = Vector2.one,
                 uvOffset = Vector2.zero
-            }
+            },
+            uvRects = new NativeArray<Rect>(uvRectsArray, Allocator.Persistent)
         });
 
         drawInfo.instances.Add(spriteEntity);
+        
     }
 }

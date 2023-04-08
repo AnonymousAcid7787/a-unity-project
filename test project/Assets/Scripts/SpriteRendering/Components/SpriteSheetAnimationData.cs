@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
+using Unity.Collections;
 
 public struct SpriteSheetAnimationData : IComponentData {
     public int currentFrame;
@@ -11,4 +12,5 @@ public struct SpriteSheetAnimationData : IComponentData {
 
     public int drawInfoHashCode;
     public InstanceData instanceData;
+    public NativeArray<Rect> uvRects;
 }

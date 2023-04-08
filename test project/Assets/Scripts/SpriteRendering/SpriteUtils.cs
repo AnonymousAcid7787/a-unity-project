@@ -48,4 +48,23 @@ public class SpriteUtils
 
         return mesh;
     }
+
+    public static Rect[] GetSpriteSheetUVs(Texture spriteSheetTexture, Sprite[] sprites) {
+        Rect[] uvRects = new Rect[sprites.Length];
+
+        for(var i=0; i<sprites.Length; i++) {
+            Rect r = sprites[i].rect;
+
+            //calculate rectangles into UV dimensions (in decimal percents like 0.20 for 20%)
+            Rect uvRect = new Rect(
+                r.x/spriteSheetTexture.width,
+                r.y/spriteSheetTexture.height,
+                r.width/spriteSheetTexture.width,
+                r.height/spriteSheetTexture.height
+            );
+            uvRects[i] = uvRect;
+        }
+
+        return uvRects;
+    }
 }
