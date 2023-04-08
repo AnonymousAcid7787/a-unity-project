@@ -32,23 +32,21 @@ public class TestBaker : Baker<TestBehavior>
             Quaternion.identity,
             Vector3.one
         );
-
-        Entity spriteEntity = CreateAdditionalEntity(entityName: authoring.name+"_sprite");
         
-        drawInfo.instances.Add(spriteEntity);
+        int instanceDataIndex = drawInfo.AddInstance(new InstanceData {
+            worldMatrix = matrix,
+            worldMatrixInverse = Matrix4x4.Inverse(matrix),
+            uvTiling = Vector2.one,
+            uvOffset = Vector2.zero,
+        });
 
-        AddComponent(spriteEntity, new SpriteSheetAnimationData {
+        AddComponent(new SpriteSheetAnimationData {
             drawInfoHashCode = drawInfo.GetHashCode(),
+            instanceDataIndex = instanceDataIndex,
             currentFrame = 0,
             frameCount = sprites.Length,
             frameTimer = 0f,
-            frameTimerMax = .5f,
-            instanceData = new InstanceData {
-                worldMatrix = matrix,
-                worldMatrixInverse = Matrix4x4.Inverse(matrix),
-                uvTiling = Vector2.one,
-                uvOffset = Vector2.zero
-            }
+            frameTimerMax = .5f
         });
     }
 }
