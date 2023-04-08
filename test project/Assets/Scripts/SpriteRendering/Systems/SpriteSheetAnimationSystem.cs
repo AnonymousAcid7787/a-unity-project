@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Burst;
+using Unity.Mathematics;
 
 [UpdateAfter(typeof(SpritePositionUpdate))]
 [BurstCompile]
@@ -42,5 +43,8 @@ public partial struct SpriteSheetAnimator : IJobEntity {
             animationData.frameTimer -= animationData.frameTimerMax;
             animationData.currentFrame = (animationData.currentFrame + 1) % animationData.frameCount;
         }
+        Rect r = animationData.uvRects[animationData.currentFrame];
+        animationData.instanceData.uvTiling = new float2(r.width, r.height);
+        animationData.instanceData.uvOffset = new float2(r.x, r.y);
     }
 }
