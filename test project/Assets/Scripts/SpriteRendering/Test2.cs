@@ -19,10 +19,10 @@ public class Test2 : MonoBehaviour
             transform.position,transform.rotation,Vector3.one
         );
 
-        drawInfo.AddInstance(new InstanceData {
-            worldMatrix = matrix,
-            worldMatrixInverse = Matrix4x4.Inverse(matrix)
-        });
+        // drawInfo.AddInstance(new InstanceData {
+        //     worldMatrix = matrix,
+        //     worldMatrixInverse = Matrix4x4.Inverse(matrix)
+        // });
     }
 
     // Update is called once per frame

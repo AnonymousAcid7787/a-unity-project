@@ -5,16 +5,18 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Burst;
 
+[UpdateAfter(typeof(SpritePositionUpdate))]
 [BurstCompile]
 public partial struct SpriteSheetAnimationSystem : ISystem
 {
+    [BurstCompile]
     public void OnCreate(ref SystemState state) {
-        SpriteSheetCache.cache = new Dictionary<int, SpriteSheetDrawInfo>();
-        SpriteSheetCache.cachedSpriteSheets = new Dictionary<Texture, Sprite[]>();
+        
     }
 
+    [BurstCompile]
     public void OnDestroy(ref SystemState state) {
-        SpriteSheetCache.ClearCache();
+        
     }
 
     [BurstCompile]
