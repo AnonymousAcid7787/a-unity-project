@@ -60,14 +60,13 @@ public class SpriteSheetDrawInfo
 
         List<InstanceData> instanceData = new List<InstanceData>();
         foreach(Entity entity in instances) {
+            if(!entityManager.HasComponent<SpriteSheetAnimationData>(entity))
+                continue;
+            
             SpriteSheetAnimationData data = entityManager.GetComponentData<SpriteSheetAnimationData>(entity);
             instanceData.Add(data.instanceData);
         }
         instancesBuffer.SetData(instanceData);
-    }
-
-    public void TestThing<T>() where T : unmanaged {
-
     }
 
     public void UpdateArgsBuffer() {

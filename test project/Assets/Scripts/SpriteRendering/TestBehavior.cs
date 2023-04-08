@@ -21,6 +21,7 @@ public class TestBaker : Baker<TestBehavior>
             new Bounds(Vector3.zero, new Vector3(10, 10, 10)),
             new MaterialPropertyBlock()
         ));
+        int hashCode = drawInfo.GetHashCode();
 
         Vector3 pos = new Vector3(
             Random.Range(-1f, 1f),
@@ -33,12 +34,10 @@ public class TestBaker : Baker<TestBehavior>
             Vector3.one
         );
 
-        Entity spriteEntity = CreateAdditionalEntity(entityName: authoring.name+"_sprite");
-        
-        drawInfo.instances.Add(spriteEntity);
-
-        AddComponent(spriteEntity, new SpriteSheetAnimationData {
-            drawInfoHashCode = drawInfo.GetHashCode(),
+        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        Entity spriteEntity = entityManager.CreateEntity(typeof(SpriteSheetAnimationData));
+        entityManager.SetComponentData(spriteEntity, new SpriteSheetAnimationData {
+            drawInfoHashCode = hashCode,
             currentFrame = 0,
             frameCount = sprites.Length,
             frameTimer = 0f,
@@ -50,5 +49,7 @@ public class TestBaker : Baker<TestBehavior>
                 uvOffset = Vector2.zero
             }
         });
+
+        drawInfo.instances.Add(spriteEntity);
     }
 }
