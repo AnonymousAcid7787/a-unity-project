@@ -49,7 +49,8 @@ public class TestBaker : Baker<TestBehavior>
                 uvTiling = Vector2.one,
                 uvOffset = Vector2.zero
             },
-            uvRects = new NativeArray<Rect>(uvRectsArray, Allocator.Persistent)
+            uvRects = new NativeArray<Rect>(uvRectsArray, Allocator.Persistent),
+            hasAddedInstance = false
         });
     }
 }

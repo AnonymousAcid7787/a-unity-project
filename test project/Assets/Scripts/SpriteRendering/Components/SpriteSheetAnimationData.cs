@@ -13,4 +13,7 @@ public struct SpriteSheetAnimationData : IComponentData {
     public int drawInfoHashCode;
     public InstanceData instanceData;
     public NativeArray<Rect> uvRects;
+
+    /*leave this as "false" when creating the component*/
+    public bool hasAddedInstance;
 }
