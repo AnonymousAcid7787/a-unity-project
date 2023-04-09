@@ -53,11 +53,6 @@ public class SpriteSheetDrawInfo
 
         List<InstanceData> instanceDatas = new List<InstanceData>();
         for(var i=0; i<instances.Count; i++) {
-            if(!instances[i].IsValid) {
-                instances.RemoveAt(i);
-                continue;
-            }
-            
             instanceDatas.Add(instances[i].ValueRW.instanceData);
         }
         

@@ -52,5 +52,6 @@ public class TestBaker : Baker<TestBehavior>
             uvRects = new NativeArray<Rect>(uvRectsArray, Allocator.Persistent),
             hasAddedInstance = false
         });
+        
     }
 }
