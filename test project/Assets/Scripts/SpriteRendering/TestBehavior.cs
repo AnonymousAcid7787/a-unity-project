@@ -50,6 +50,6 @@ public class TestBaker : Baker<TestBehavior>
                 uvOffset = Vector2.zero
             },
             uvRects = new NativeArray<Rect>(uvRectsArray, Allocator.Persistent)
-        });        
+        });
     }
 }
