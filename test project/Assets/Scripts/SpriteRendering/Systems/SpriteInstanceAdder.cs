@@ -17,7 +17,7 @@ public class SpriteInstanceAdder : SystemBase
                 continue;
             
             SpriteSheetDrawInfo drawInfo = SpriteSheetCache.cache[aspect.animationData.ValueRW.drawInfoHashCode];
-            drawInfo.instances.Add(aspect);
+            drawInfo.instances.Add(aspect.animationData);
             aspect.animationData.ValueRW.hasAddedInstance = true;
         }
     }

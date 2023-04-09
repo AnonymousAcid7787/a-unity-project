@@ -10,7 +10,7 @@ public class SpriteSheetDrawInfo
 
     public ComputeBuffer argsBuffer;
     public ComputeBuffer instancesBuffer;
-    public List<Entity> instances;
+    public List<RefRW<SpriteSheetAnimationData>> instances;
     public Bounds renderBounds;
     public MaterialPropertyBlock materialPropertyBlock;
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
@@ -25,7 +25,7 @@ public class SpriteSheetDrawInfo
         materialPropertyBlock = new MaterialPropertyBlock();
         shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         recieveShadows = true;
-        instances = new List<Entity>();
+        instances = new List<RefRW<SpriteSheetAnimationData>>();
 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
@@ -37,14 +37,9 @@ public class SpriteSheetDrawInfo
         this.recieveShadows = args.recieveShadows;
         this.renderBounds = args.renderBounds;
         this.shadowCastingMode = args.shadowCastingMode;
-        this.instances = new List<Entity>();
+        this.instances = new List<RefRW<SpriteSheetAnimationData>>();
 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-    }
-
-    public void RemoveInstance(Entity entityContainingInstanceData) {
-
-        instances.Remove(entityContainingInstanceData);
     }
 
     public void UpdateAllBuffers() {
@@ -59,13 +54,15 @@ public class SpriteSheetDrawInfo
         instancesBuffer = new ComputeBuffer(instances.Count, InstanceData.Size());
 
         List<InstanceData> instanceData = new List<InstanceData>();
-        foreach(Entity entity in instances) {
-            if(!entityManager.HasComponent<SpriteSheetAnimationData>(entity))
+        for(var i=0; i<instances.Count; i++) {
+            if(!instances[i].IsValid) {
+                instances.RemoveAt(i);
                 continue;
-            
-            SpriteSheetAnimationData data = entityManager.GetComponentData<SpriteSheetAnimationData>(entity);
-            instanceData.Add(data.instanceData);
+            }
+                
+            instanceData.Add(instances[i].ValueRW.instanceData);
         }
+
         instancesBuffer.SetData(instanceData);
     }
 
