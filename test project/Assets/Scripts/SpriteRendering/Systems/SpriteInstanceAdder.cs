@@ -1,38 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Entities;
+using System.Diagnostics;
 using UnityEngine;
+using Unity.Entities;
+using Unity.Jobs;
 
-public class SpriteInstanceAdder : SystemBase
+public partial struct SpriteInstanceAdder : ISystem
 {
-    private EntityQuery query;
-    protected override void OnCreate()
+    public void OnCreate(ref SystemState state)
     {
-        query = GetEntityQuery(typeof(SpriteRenderAspect));
+        
     }
-    protected override void OnUpdate()
+
+    public void OnDestroy(ref SystemState state)
     {
-        foreach(SpriteRenderAspect aspect in SystemAPI.Query<SpriteRenderAspect>()) {
-            if(aspect.animationData.ValueRW.hasAddedInstance)
-                continue;
-            
-            SpriteSheetDrawInfo drawInfo = SpriteSheetCache.cache[aspect.animationData.ValueRW.drawInfoHashCode];
-            drawInfo.instances.Add(aspect.animationData);
-            aspect.animationData.ValueRW.hasAddedInstance = true;
-        }
+        
+    }
+
+    public void OnUpdate(ref SystemState state)
+    {
+        JobHandle handle =  new InstanceAdderJob{}.ScheduleParallel(state.Dependency);
+        handle.Complete();
     }
 }
-
-// public partial struct InstanceAdderJob : IJobEntity {
-//     public void Execute(ref SpriteRenderAspect aspect) {
-//         if(aspect.animationData.ValueRW.hasAddedInstance)
-//             return;
-
-//         SpriteSheetDrawInfo drawInfo =  SpriteSheetCache.cache[aspect.animationData.ValueRW.drawInfoHashCode];
-//         drawInfo.instances.add
+public partial struct InstanceAdderJob : IJobEntity {
+    public void Execute(ref SpriteRenderAspect aspect) {
+        if(aspect.animationData.ValueRW.hasAddedInstance)
+            return;
         
-//         aspect.animationData.ValueRW.hasAddedInstance = true;
-//     }
-// }
-
-
+        SpriteSheetDrawInfo drawInfo = SpriteSheetCache.cache[aspect.animationData.ValueRW.drawInfoHashCode];
+        drawInfo.instances.Add(aspect.animationData);
+        aspect.animationData.ValueRW.hasAddedInstance = true;
+    }
+}

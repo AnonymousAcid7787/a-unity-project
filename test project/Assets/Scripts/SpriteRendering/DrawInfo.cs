@@ -51,19 +51,18 @@ public class SpriteSheetDrawInfo
     public void UpdateInstancesBuffer() {
         instancesBuffer?.Release();
 
-        instancesBuffer = new ComputeBuffer(instances.Count, InstanceData.Size());
-
-        List<InstanceData> instanceData = new List<InstanceData>();
+        List<InstanceData> instanceDatas = new List<InstanceData>();
         for(var i=0; i<instances.Count; i++) {
             if(!instances[i].IsValid) {
                 instances.RemoveAt(i);
                 continue;
             }
-                
-            instanceData.Add(instances[i].ValueRW.instanceData);
+            
+            instanceDatas.Add(instances[i].ValueRW.instanceData);
         }
-
-        instancesBuffer.SetData(instanceData);
+        
+        instancesBuffer = new ComputeBuffer(instanceDatas.Count, InstanceData.Size());
+        instancesBuffer.SetData(instanceDatas);
     }
 
     public void UpdateArgsBuffer() {
