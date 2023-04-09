@@ -37,9 +37,7 @@ public class TestBaker : Baker<TestBehavior>
 
         Rect[] uvRectsArray = SpriteUtils.GetSpriteSheetUVs(pair.Key, pair.Value);
 
-        EntityManager entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        Entity spriteEntity = entityManager.CreateEntity(typeof(SpriteSheetAnimationData));
-        entityManager.SetComponentData(spriteEntity, new SpriteSheetAnimationData {
+        AddComponent(new SpriteSheetAnimationData {
             drawInfoHashCode = hashCode,
             currentFrame = 0,
             frameCount = pair.Value.Length,
@@ -52,9 +50,6 @@ public class TestBaker : Baker<TestBehavior>
                 uvOffset = Vector2.zero
             },
             uvRects = new NativeArray<Rect>(uvRectsArray, Allocator.Persistent)
-        });
-
-        drawInfo.instances.Add(spriteEntity);
-        
+        });        
     }
 }

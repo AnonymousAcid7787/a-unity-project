@@ -22,7 +22,7 @@ public partial struct SpritePositionUpdate : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        
+        new SpritePositionUpdateJob{}.ScheduleParallel();
     }
 }
 
@@ -32,6 +32,7 @@ public partial struct SpritePositionUpdateJob : IJobEntity {
 
     [BurstCompile]
     public void Execute(ref LocalToWorld localToWorld, ref SpriteSheetAnimationData data) {
-        
+        data.instanceData.worldMatrix = localToWorld.Value;
+        data.instanceData.worldMatrixInverse = Matrix4x4.Inverse(localToWorld.Value);
     }
 }
