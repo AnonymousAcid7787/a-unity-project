@@ -6,6 +6,7 @@ using Unity.Jobs;
 using Unity.Burst;
 using Unity.Mathematics;
 
+//Instance data modifier
 [UpdateAfter(typeof(SpritePositionUpdate))]
 [BurstCompile]
 public partial struct SpriteSheetAnimationSystem : ISystem

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 
-[UpdateAfter(typeof(SpriteSheetAnimationSystem))]
+[UpdateAfter(typeof(SpriteInstanceUpdate))]
 public partial class SpriteSheetRenderer : SystemBase
 {
     protected override void OnCreate()

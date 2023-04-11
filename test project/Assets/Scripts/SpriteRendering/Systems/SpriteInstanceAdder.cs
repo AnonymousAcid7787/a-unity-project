@@ -5,7 +5,8 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Jobs;
 
-public partial struct SpriteInstanceAdder : ISystem
+[UpdateAfter(typeof(SpriteSheetAnimationSystem))]
+public partial struct SpriteInstanceUpdate : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
@@ -19,17 +20,13 @@ public partial struct SpriteInstanceAdder : ISystem
 
     public void OnUpdate(ref SystemState state)
     {
-        JobHandle handle =  new InstanceAdderJob{}.ScheduleParallel(state.Dependency);
+        JobHandle handle =  new SpriteInstanceUpdateJob{}.ScheduleParallel(state.Dependency);
         handle.Complete();
     }
 }
-public partial struct InstanceAdderJob : IJobEntity {
-    public void Execute(ref SpriteRenderAspect aspect) {
-        if(aspect.animationData.ValueRW.hasAddedInstance)
-            return;
-        
+public partial struct SpriteInstanceUpdateJob : IJobEntity {
+    public void Execute(SpriteRenderAspect aspect) {
         SpriteSheetDrawInfo drawInfo = SpriteSheetCache.cache[aspect.animationData.ValueRW.drawInfoHashCode];
-        drawInfo.instances.Add(aspect.animationData);
-        aspect.animationData.ValueRW.hasAddedInstance = true;
+        drawInfo.instances[aspect.animationData.ValueRW.instanceKey] = aspect.animationData.ValueRW.instanceData;
     }
 }

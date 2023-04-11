@@ -11,9 +11,7 @@ public struct SpriteSheetAnimationData : IComponentData {
     public float frameTimerMax;
 
     public int drawInfoHashCode;
+    public int instanceKey;
     public InstanceData instanceData;
     public NativeArray<Rect> uvRects;
-
-    /*leave this as "false" when creating the component*/
-    public bool hasAddedInstance;
 }

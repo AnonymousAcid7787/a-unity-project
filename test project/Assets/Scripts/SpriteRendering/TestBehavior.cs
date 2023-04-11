@@ -24,6 +24,10 @@ public class TestBaker : Baker<TestBehavior>
         ));
         int hashCode = drawInfo.GetHashCode();
 
+        int instanceKey = GetEntity().GetHashCode();
+        if(!drawInfo.instances.ContainsKey(instanceKey))
+            drawInfo.instances.Add(instanceKey, new InstanceData{});
+
         Vector3 pos = new Vector3(
             Random.Range(-1f, 1f),
             Random.Range(-1f, 1f),
@@ -50,7 +54,7 @@ public class TestBaker : Baker<TestBehavior>
                 uvOffset = Vector2.zero
             },
             uvRects = new NativeArray<Rect>(uvRectsArray, Allocator.Persistent),
-            hasAddedInstance = false
+            instanceKey = instanceKey,
         });
         
     }

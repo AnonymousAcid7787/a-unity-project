@@ -10,7 +10,7 @@ public class SpriteSheetDrawInfo
 
     public ComputeBuffer argsBuffer;
     public ComputeBuffer instancesBuffer;
-    public List<RefRW<SpriteSheetAnimationData>> instances;
+    public Dictionary<int, InstanceData> instances;
     public Bounds renderBounds;
     public MaterialPropertyBlock materialPropertyBlock;
     public UnityEngine.Rendering.ShadowCastingMode shadowCastingMode;
@@ -25,7 +25,7 @@ public class SpriteSheetDrawInfo
         materialPropertyBlock = new MaterialPropertyBlock();
         shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         recieveShadows = true;
-        instances = new List<RefRW<SpriteSheetAnimationData>>();
+        instances = new Dictionary<int, InstanceData> ();
 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
@@ -37,7 +37,7 @@ public class SpriteSheetDrawInfo
         this.recieveShadows = args.recieveShadows;
         this.renderBounds = args.renderBounds;
         this.shadowCastingMode = args.shadowCastingMode;
-        this.instances = new List<RefRW<SpriteSheetAnimationData>>();
+        this.instances = new Dictionary<int, InstanceData> ();
 
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
     }
@@ -51,13 +51,8 @@ public class SpriteSheetDrawInfo
     public void UpdateInstancesBuffer() {
         instancesBuffer?.Release();
 
-        List<InstanceData> instanceDatas = new List<InstanceData>();
-        for(var i=0; i<instances.Count; i++) {
-            instanceDatas.Add(instances[i].ValueRW.instanceData);
-        }
-        
-        instancesBuffer = new ComputeBuffer(instanceDatas.Count, InstanceData.Size());
-        instancesBuffer.SetData(instanceDatas);
+        instancesBuffer = new ComputeBuffer(instances.Count, InstanceData.Size());
+        instancesBuffer.SetData(new List<InstanceData>(instances.Values));
     }
 
     public void UpdateArgsBuffer() {

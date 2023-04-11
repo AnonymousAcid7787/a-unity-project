@@ -6,6 +6,7 @@ using Unity.Burst;
 using Unity.Jobs;
 using Unity.Transforms;
 
+//Instance data modifier
 [BurstCompile]
 public partial struct SpritePositionUpdate : ISystem
 {
