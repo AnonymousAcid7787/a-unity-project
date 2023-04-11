@@ -4,15 +4,19 @@ using System.Diagnostics;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Burst;
 
+[BurstCompile]
 [UpdateAfter(typeof(SpriteSheetAnimationSystem))]
 public partial struct SpriteInstanceUpdate : ISystem
 {
+    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         
     }
 
+    [BurstCompile]
     public void OnDestroy(ref SystemState state)
     {
         

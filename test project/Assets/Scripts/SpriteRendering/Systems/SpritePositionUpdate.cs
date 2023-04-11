@@ -21,6 +21,7 @@ public partial struct SpritePositionUpdate : ISystem
         SpriteSheetCache.ClearCache();
     }
 
+    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         new SpritePositionUpdateJob{}.ScheduleParallel();
