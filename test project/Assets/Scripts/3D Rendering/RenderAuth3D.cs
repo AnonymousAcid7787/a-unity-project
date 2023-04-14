@@ -22,6 +22,8 @@ public class Render3DBaker : Baker<RenderAuth3D>
             authoring.shadowCastingMode,
             authoring.recieveShadows
         ));
+
+        #region component info
         int drawInfoHashCode = drawInfo.GetHashCode();
 
         int instanceKey = GetEntity().GetHashCode();
@@ -31,12 +33,13 @@ public class Render3DBaker : Baker<RenderAuth3D>
             Random.Range(-1f, 1f),
             Random.Range(-1f, 1f),
             0
-        );
+        );  
         Matrix4x4 matrix = Matrix4x4.TRS(
             pos,
             Quaternion.identity,
             Vector3.one
         );
+        #endregion component info
 
         AddComponent(new RenderData3D{
             drawInfoHashCode = drawInfoHashCode,
@@ -44,7 +47,8 @@ public class Render3DBaker : Baker<RenderAuth3D>
                 worldMatrix = matrix,
                 worldMatrixInverse = Matrix4x4.Inverse(matrix)
                 /*no need to add uv tiling and stuff, because the 3d shader graphs won't be using such data*/
-            },            
+            },     
+            instanceKey = instanceKey
         });
     }
 }
