@@ -25,16 +25,15 @@ public class TestBaker : Baker<TestBehavior>
         int hashCode = drawInfo.GetHashCode();
 
         int instanceKey = GetEntity().GetHashCode();
-        if(!drawInfo.instances.ContainsKey(instanceKey))
             drawInfo.instances.Add(instanceKey, new InstanceData{});
 
-        Vector3 pos = new Vector3(
-            Random.Range(-1f, 1f),
-            Random.Range(-1f, 1f),
-            0
-        );
+        // Vector3 pos = new Vector3(
+        //     Random.Range(-1f, 1f),
+        //     Random.Range(-1f, 1f),
+        //     0
+        // );
         Matrix4x4 matrix = Matrix4x4.TRS(
-            pos,
+            authoring.transform.position,
             Quaternion.identity,
             Vector3.one
         );
