@@ -1,18 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
 
-public class RenderData3D : MonoBehaviour
+public struct RenderData3D : IComponentData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public int drawInfoHashCode;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public InstanceData instanceData;
+    public int instanceKey;
 }
