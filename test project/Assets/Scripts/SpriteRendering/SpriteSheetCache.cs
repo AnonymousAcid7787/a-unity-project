@@ -51,5 +51,6 @@ public class SpriteSheetCache
         foreach(KeyValuePair<int, SpriteSheetDrawInfo> cachedInfo in cache) {
             cachedInfo.Value.DestroyBuffers();
         }
+        cache.Clear();
     }
 }
