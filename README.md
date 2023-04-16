@@ -10,7 +10,7 @@ This project might turn into a proper game project if I believe it is fine to us
     
   - [x] Sprite rendering  
   - [x] Player Movement  
-  - [ ] Gravity + player jumping  
+  - [ ] Gravity + physics + player jumping  
 
 </details>
 
