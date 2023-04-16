@@ -35,7 +35,7 @@ public partial struct SpritePositionUpdate : ISystem
 public partial struct SpritePositionUpdateJob : IJobEntity {
 
     [BurstCompile]
-    public void Execute(ref LocalToWorld localToWorld, ref SpriteSheetAnimationData data) {
+    public void Execute(in LocalToWorld localToWorld, ref SpriteSheetAnimationData data) {
         data.instanceData.worldMatrix = localToWorld.Value;
         data.instanceData.worldMatrixInverse = Matrix4x4.Inverse(localToWorld.Value);
     }

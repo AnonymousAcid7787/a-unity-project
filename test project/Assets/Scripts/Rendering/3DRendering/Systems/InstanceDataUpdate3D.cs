@@ -27,7 +27,7 @@ public partial struct InstanceDataUpdate3D : ISystem
 
 //Update the draw information to have the right instance data.
 partial struct InstanceDataUpdateJob3D: IJobEntity {
-    public void Execute(RenderData3D data) {
+    public void Execute(in RenderData3D data) {
         DrawInfo3D drawInfo = RenderCache3D.cache[data.drawInfoHashCode];
         drawInfo.instances[data.instanceKey] = data.instanceData;
     }

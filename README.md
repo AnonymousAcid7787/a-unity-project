@@ -7,10 +7,10 @@ This project might turn into a proper game project if I believe it is fine to us
 
 <summary>Current features</summary>  
   If a feature is on the list, but doesn't have a checked box, it is a work in progress/to-do.  
-
+    
   - [x] Sprite rendering  
-  - [ ] Player movement  
-  - [ ] 3D rendering + procedural animation  
+  - [x] Player Movement  
+  - [ ] Gravity + player jumping  
 
 </details>
 
