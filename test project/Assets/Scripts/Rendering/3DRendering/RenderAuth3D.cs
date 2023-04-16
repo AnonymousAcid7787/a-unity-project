@@ -55,5 +55,6 @@ public class Render3DBaker : Baker<RenderAuth3D>
             },     
             instanceKey = instanceKey
         });
+        
     }
 }

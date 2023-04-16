@@ -30,7 +30,7 @@ public partial struct UpdateRenderPositions3D : ISystem
 }
 
 partial struct RenderPositionUpdater3D : IJobEntity {
-    public void Execute(LocalToWorld worldMatrix, ref RenderData3D data) {
+    public void Execute(in LocalToWorld worldMatrix, ref RenderData3D data) {
        data.instanceData.worldMatrix = worldMatrix.Value;
        data.instanceData.worldMatrixInverse = Matrix4x4.Inverse(worldMatrix.Value);
     }

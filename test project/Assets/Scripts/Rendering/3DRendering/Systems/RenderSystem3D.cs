@@ -18,9 +18,9 @@ public partial class RenderSystem3D : SystemBase
 
     protected override void OnUpdate()
     {
-        foreach(RenderData3D data in SystemAPI.Query<RenderData3D>()) {
+        Entities.ForEach((in RenderData3D data) => {
             DrawInfo3D drawInfo = RenderCache3D.cache[data.drawInfoHashCode];
             drawInfo.Draw();
-        }
+        }).WithoutBurst().Run();
     }
 }

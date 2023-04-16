@@ -17,8 +17,8 @@ public partial class SpriteSheetRenderer : SystemBase
     }
     protected override void OnUpdate()
     {
-        foreach(SpriteSheetAnimationData data in SystemAPI.Query<SpriteSheetAnimationData>()) {
+        Entities.ForEach((in SpriteSheetAnimationData data) => {
             SpriteSheetCache.cache[data.drawInfoHashCode].Draw();
-        }
+        }).WithoutBurst().Run();
     }
 }

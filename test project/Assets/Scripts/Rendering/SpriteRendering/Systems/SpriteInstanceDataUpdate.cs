@@ -29,7 +29,7 @@ public partial struct SpriteInstanceDataUpdate : ISystem
     }
 }
 public partial struct SpriteInstanceDataUpdateJob : IJobEntity {
-    public void Execute(SpriteRenderAspect aspect) {
+    public void Execute(ref SpriteRenderAspect aspect) {
         SpriteSheetDrawInfo drawInfo = SpriteSheetCache.cache[aspect.animationData.ValueRW.drawInfoHashCode];
         drawInfo.instances[aspect.animationData.ValueRW.instanceKey] = aspect.animationData.ValueRW.instanceData;
     }

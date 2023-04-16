@@ -5,16 +5,16 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
 
-public class TestBehavior : MonoBehaviour
+public class SpriteRendererAuthoring : MonoBehaviour
 {
     public Material spriteMaterial;
     public Mesh mesh;
     public TransformUsageFlags transformUsageFlags;
 }
 
-public class TestBaker : Baker<TestBehavior>
+public class SpriteRendererBaking : Baker<SpriteRendererAuthoring>
 {
-    public override void Bake(TestBehavior authoring)
+    public override void Bake(SpriteRendererAuthoring authoring)
     {
         Entity thisEntity = GetEntity(authoring.transformUsageFlags);
 
