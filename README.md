@@ -6,10 +6,11 @@ This project might turn into a proper game project if I belive it is fine to use
 <details open>
 
 <summary>Current features</summary>  
-  If a feature is on the list, but doesn't have a checked box, it is a work in progress.  
+  If a feature is on the list, but doesn't have a checked box, it is a work in progress/to-do.  
 
   - [x] Sprite rendering  
-  - [ ] 3D skinned mesh rendering
+  - [x] Player Movement
+  - [ ] Gravity + player jumping
 
 </details>
 
