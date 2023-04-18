@@ -9,10 +9,7 @@ using Unity.Mathematics;
 public struct PlayerMovementData : IComponentData
 {
     public float3 movementDirection;
-    public bool canJump;
     public bool jump;
     public float movementSpeed;
-    // public float gravity;
+    // public float gravityModifier;
 }
-
-//public struct PlayerSkillsInputs : IComponentData
