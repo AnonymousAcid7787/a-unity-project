@@ -18,16 +18,12 @@ public partial struct IsGroundedSystem : ISystem {
 
     }
     public void OnUpdate(ref SystemState state) {
-
-        state.Dependency = 
-            new IsGroundedJob{
-                
-            }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
+        state.Dependency = new IsGroundedJob{}.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
     }
+}
 
-    struct IsGroundedJob : ICollisionEventsJob {
-        public void Execute(CollisionEvent collisionEvent) {
-            // Debug.Log(collisionEvent.Normal);
-        }
+public partial struct IsGroundedJob : ICollisionEventsJob {
+    public void Execute(CollisionEvent collisionEvent) {
+        Debug.Log(192839124);
     }
 }
