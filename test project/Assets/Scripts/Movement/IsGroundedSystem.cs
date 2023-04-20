@@ -7,7 +7,6 @@ using Unity.Physics;
 using Unity.Physics.Systems;
 using UnityEngine;
 
-[RequireMatchingQueriesForUpdate]
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(PhysicsSystemGroup))]
 public partial struct IsGroundedSystem : ISystem {
