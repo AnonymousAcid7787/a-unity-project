@@ -12,6 +12,7 @@ public class PlayerInputAuthoring : MonoBehaviour
     public KeyCode jump;
 
     public float movementSpeed;
+    public float jumpHeight;
 }
 
 public class PlayerInputBaker : Baker<PlayerInputAuthoring>
@@ -26,8 +27,6 @@ public class PlayerInputBaker : Baker<PlayerInputAuthoring>
             rightKey = authoring.rightKey,
             jump = authoring.jump,
         });
-        AddComponent(thisEntity, new PlayerMovementData {
-            movementSpeed = authoring.movementSpeed,
-        });
+        AddComponent<PlayerInputData>(thisEntity);
     }
 }
