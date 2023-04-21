@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using Unity.Burst;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
@@ -9,10 +10,11 @@ using UnityEngine;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
 [UpdateAfter(typeof(PhysicsSystemGroup))]
+[BurstCompile]
 public partial struct IsGroundedSystem : ISystem {
-    
     internal ComponentDataHandles componentDataHandles;
 
+    [BurstCompile]
     internal struct ComponentDataHandles
     {
         public ComponentLookup<MovementData> movementData;
@@ -28,10 +30,12 @@ public partial struct IsGroundedSystem : ISystem {
         }
     }
     
+    [BurstCompile]
     public void OnCreate(ref SystemState state) {
         componentDataHandles = new ComponentDataHandles(ref state);
     }
     
+    [BurstCompile]
     public void OnUpdate(ref SystemState state) {
         componentDataHandles.Update(ref state);
 
@@ -48,24 +52,31 @@ public partial struct IsGroundedSystem : ISystem {
         //When they are in the air after their isGrounded got reset, then it won't update to being true/false, leaving it as "false" which is accurate.
     }
 
+    [BurstCompile]
     partial struct ResetIsGroundedJob : IJobEntity {
+        
+        [BurstCompile]
         public void Execute(ref MovementData movementData) {
             movementData.isGrounded = false;
         }
     }
 
+    [BurstCompile]
     partial struct IsGroundedJob : ICollisionEventsJob {
+        
         public ComponentLookup<MovementData> movementData;
-            public void Execute(CollisionEvent collisionEvent) {
-                Entity entityA = collisionEvent.EntityA;
-                if(!movementData.HasComponent(entityA))
-                    return;
-                bool isGrounded = collisionEvent.Normal.y > 0;
 
-                //Set isGrounded bool
-                MovementData dataCopy = movementData[entityA];
-                    dataCopy.isGrounded = isGrounded;
-                movementData[entityA] = dataCopy;
+        [BurstCompile]
+        public void Execute(CollisionEvent collisionEvent) {
+            Entity entityA = collisionEvent.EntityA;
+            if(!movementData.HasComponent(entityA))
+                return;
+            bool isGrounded = collisionEvent.Normal.y > 0;
+
+            //Set isGrounded bool
+            MovementData dataCopy = movementData[entityA];
+                dataCopy.isGrounded = isGrounded;
+            movementData[entityA] = dataCopy;
         }
     }
 }
