@@ -9,5 +9,5 @@ public struct MovementData : IComponentData
     public bool isGrounded;
     public float movementSpeed;
     public float jumpHeight;
-    // public float gravityModifier;
+    public float gravityFactor;
 }

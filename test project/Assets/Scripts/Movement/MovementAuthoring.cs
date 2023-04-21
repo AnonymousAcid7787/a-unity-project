@@ -8,6 +8,7 @@ public class MovementAuthoring : MonoBehaviour
     public TransformUsageFlags transformUsageFlags;
     public float movementSpeed;
     public float jumpHeight;
+    public float gravityFactor = 1;
 }
 
 public class MovementBaker : Baker<MovementAuthoring>
@@ -17,6 +18,7 @@ public class MovementBaker : Baker<MovementAuthoring>
         AddComponent(GetEntity(authoring.transformUsageFlags), new MovementData {
             movementSpeed = authoring.movementSpeed,
             jumpHeight = authoring.jumpHeight,
+            gravityFactor = authoring.gravityFactor
         });
     }
 }

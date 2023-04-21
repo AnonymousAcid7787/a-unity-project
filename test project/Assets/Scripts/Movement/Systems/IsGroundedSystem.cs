@@ -32,10 +32,6 @@ public partial struct IsGroundedSystem : ISystem {
         componentDataHandles = new ComponentDataHandles(ref state);
     }
     
-    public void OnDestroy(ref SystemState state) {
-
-    }
-    
     public void OnUpdate(ref SystemState state) {
         componentDataHandles.Update(ref state);
 
@@ -61,10 +57,12 @@ public partial struct IsGroundedSystem : ISystem {
     partial struct IsGroundedJob : ICollisionEventsJob {
         public ComponentLookup<MovementData> movementData;
             public void Execute(CollisionEvent collisionEvent) {
+                Entity entityA = collisionEvent.EntityA;
+                if(!movementData.HasComponent(entityA))
+                    return;
                 bool isGrounded = collisionEvent.Normal.y > 0;
 
                 //Set isGrounded bool
-                Entity entityA = collisionEvent.EntityA;
                 MovementData dataCopy = movementData[entityA];
                     dataCopy.isGrounded = isGrounded;
                 movementData[entityA] = dataCopy;
