@@ -222,7 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccea9ea98e38942e0b0938c27ed1903e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MotionType: 1
+  m_MotionType: 0
   m_Smoothing: 0
   m_Mass: 1
   m_LinearDamping: 0.01
@@ -732,7 +732,6 @@ GameObject:
   - component: {fileID: 1552986422}
   - component: {fileID: 1552986426}
   - component: {fileID: 1552986427}
-  - component: {fileID: 1552986428}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -981,7 +980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccea9ea98e38942e0b0938c27ed1903e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MotionType: 0
+  m_MotionType: 2
   m_Smoothing: 0
   m_Mass: 1
   m_LinearDamping: 0.01
@@ -1020,15 +1019,3 @@ MonoBehaviour:
     Tag05: 1
     Tag06: 1
     Tag07: 1
---- !u!114 &1552986428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1552986421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11bb3eda10653c24fac9b6bf4d4fb69d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
