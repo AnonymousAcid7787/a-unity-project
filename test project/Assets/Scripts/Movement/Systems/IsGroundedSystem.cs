@@ -37,6 +37,7 @@ public partial struct IsGroundedSystem : ISystem {
     
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
+        return;
         componentDataHandles.Update(ref state);
 
         //First reset the isGrounded bool.
@@ -45,8 +46,8 @@ public partial struct IsGroundedSystem : ISystem {
 
         //Then update the isGrounded values
         state.Dependency = new IsGroundedJob{
-            movementData = componentDataHandles.movementData
-        }.Schedule(SystemAPI.GetSingleton<SimulationSingleton>(), state.Dependency);
+            // movementData = componentDataHandles.movementData
+        }.Schedule(/*SystemAPI.GetSingleton<SimulationSingleton>(),*/ state.Dependency);
 
         //Why do this? because this way of ground checking uses collision events. If the player is in the middle of the air, you want to reset the isGrounded bool
         //When they are in the air after their isGrounded got reset, then it won't update to being true/false, leaving it as "false" which is accurate.
@@ -61,22 +62,32 @@ public partial struct IsGroundedSystem : ISystem {
         }
     }
 
-    [BurstCompile]
-    partial struct IsGroundedJob : ICollisionEventsJob {
+    #region commented
+    // [BurstCompile]
+    // partial struct IsGroundedJob : ICollisionEventsJob {
         
-        public ComponentLookup<MovementData> movementData;
+    //     public ComponentLookup<MovementData> movementData;
 
-        [BurstCompile]
-        public void Execute(CollisionEvent collisionEvent) {
-            Entity entityA = collisionEvent.EntityA;
-            if(!movementData.HasComponent(entityA))
-                return;
-            bool isGrounded = collisionEvent.Normal.y > 0;
+    //     [BurstCompile]
+    //     public void Execute(CollisionEvent collisionEvent) {
+    //         Entity entityA = collisionEvent.EntityA;
+    //         if(!movementData.HasComponent(entityA))
+    //             return;
+    //         bool isGrounded = collisionEvent.Normal.y > 0;
 
-            //Set isGrounded bool
-            MovementData dataCopy = movementData[entityA];
-                dataCopy.isGrounded = isGrounded;
-            movementData[entityA] = dataCopy;
+    //         //Set isGrounded bool
+    //         MovementData dataCopy = movementData[entityA];
+    //             dataCopy.isGrounded = isGrounded;
+    //         movementData[entityA] = dataCopy;
+    //     }
+    // }
+    #endregion commented
+    
+    [BurstCompile]
+    partial struct IsGroundedJob : IJobEntity {
+        public void Execute(in PhysicsCollider col) {
+
         }
     }
+
 }
