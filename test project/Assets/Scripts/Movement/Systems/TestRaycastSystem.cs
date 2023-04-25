@@ -11,7 +11,7 @@ using Unity.Physics.Aspects;
 using Unity.Jobs;
 
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-[UpdateAfter(typeof(LockPlayerRotationSystem))]
+// [UpdateAfter(typeof(LockPlayerRotationSystem))]
 public partial struct TestRaycastSystem : ISystem
 {
     public void OnCreate(ref SystemState state) {}
