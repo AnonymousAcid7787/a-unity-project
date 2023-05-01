@@ -43,7 +43,6 @@ public partial class PlayerInputSystem : SystemBase
             //Jump if button is pressed & on the ground 
             if(jump && movementData.isGrounded) {
                 velocity.Linear.y += movementData.jumpHeight;
-                movementData.isGrounded = false;
             }
             #endregion jumping
         }).WithoutBurst().Run();
