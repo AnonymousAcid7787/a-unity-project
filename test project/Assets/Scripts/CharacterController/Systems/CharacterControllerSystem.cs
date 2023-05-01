@@ -68,10 +68,6 @@ public partial struct CharacterControllerSystem : ISystem
                     pos = currPos+totalVelocity,
                     rot = currRot
                 };
-                PhysicsUtils.ColliderDistance(
-                    out DistanceHit verticalPenetration,
-                    in collider,
-                )
             }
             #endregion vertical movement
 

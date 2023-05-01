@@ -57,7 +57,7 @@ public struct PhysicsUtils
         }
     }
     
-    public unsafe static bool ColliderDistance(
+    public unsafe static bool ColliderCast(
         out ColliderCastHit nearestHit,
         in PhysicsCollider collider,
         float3 from,
