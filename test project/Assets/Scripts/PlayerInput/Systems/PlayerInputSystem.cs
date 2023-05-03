@@ -42,6 +42,7 @@ public partial class PlayerInputSystem : SystemBase
             //Make sure that the player doesn't exceed its max movement speed
             Vector3.ClampMagnitude(velocityChange, movementData.maxForce);
             
+            velocityChange.y = 0;
             rigidBodyAspect.ApplyLinearImpulseWorldSpace(velocityChange);
 
             playerInputData.movementDirection.x = xDirection;
