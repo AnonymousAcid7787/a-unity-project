@@ -7,6 +7,6 @@ using Unity.Mathematics;
 //This file contains all results of key presses
 public struct PlayerInputData : IComponentData
 {
-    public float3 movementDirection;
+    public float2 movementDirection;
     public bool jump;
 }

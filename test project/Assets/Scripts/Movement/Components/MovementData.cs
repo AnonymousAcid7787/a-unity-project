@@ -10,4 +10,5 @@ public struct MovementData : IComponentData
     public float movementSpeed;
     public float jumpHeight;
     public float gravityFactor;
+    public float maxForce;
 }

@@ -10,9 +10,6 @@ public class PlayerInputAuthoring : MonoBehaviour
     public KeyCode leftKey;
     public KeyCode rightKey;
     public KeyCode jump;
-
-    public float movementSpeed;
-    public float jumpHeight;
 }
 
 public class PlayerInputBaker : Baker<PlayerInputAuthoring>
