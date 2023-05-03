@@ -13,7 +13,6 @@ using Unity.Physics.Systems;
 //It also makes the player move accordingly
 //In the future, a separate system might be made for each type of input.
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
-[UpdateBefore(typeof(PhysicsSystemGroup))]
 public partial class PlayerInputSystem : SystemBase
 {
     protected override void OnUpdate()
