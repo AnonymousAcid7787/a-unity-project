@@ -16,7 +16,6 @@ using UnityEngine;
 [UpdateAfter(typeof(PhysicsSystemGroup))]
 [BurstCompile]
 public partial struct IsGroundedSystem : ISystem {
-    
     [BurstCompile]
     public void OnCreate(ref SystemState state) {
         
@@ -53,7 +52,7 @@ public partial struct IsGroundedSystem : ISystem {
                             in LocalTransform localTransform,
                             in ColliderAspect aspect,
                             ref MovementData movementData) {
-            float3 pos = localTransform.Position - new float3(0, 0.1f, 0);
+            float3 pos = localTransform.Position - new float3(0, 0.2f, 0);
             NativeList<ColliderCastHit> hits = new NativeList<ColliderCastHit>(Allocator.Temp);
             unsafe {
                 //right now its just casting to its self
@@ -63,7 +62,7 @@ public partial struct IsGroundedSystem : ISystem {
                         Start = pos,
                         End = pos,
                         Orientation = localTransform.Rotation,
-                        QueryColliderScale = localTransform.Scale-0.01f,
+                        QueryColliderScale = localTransform.Scale-0.2f,
                     },
                     ref hits);
             }

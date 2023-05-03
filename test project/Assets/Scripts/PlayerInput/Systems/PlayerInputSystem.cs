@@ -13,6 +13,7 @@ using Unity.Physics.Systems;
 //It also makes the player move accordingly
 //In the future, a separate system might be made for each type of input.
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup))]
+[UpdateAfter(typeof(PhysicsSystemGroup))]
 public partial class PlayerInputSystem : SystemBase
 {
     protected override void OnUpdate()
@@ -38,11 +39,11 @@ public partial class PlayerInputSystem : SystemBase
             //Calculate forces
             float3 velocityChange = targetVelocity - physicsVelocity.Linear;
 
-            //Make sure that the player doesn't exceed its max movement speed
+            //Make sure that the player doesn't exceed its max movement force
             Vector3.ClampMagnitude(velocityChange, movementData.maxForce);
             
             velocityChange.y = 0;
-            rigidBodyAspect.ApplyLinearImpulseWorldSpace(velocityChange);
+            rigidBodyAspect.ApplyLinearImpulseLocalSpace(velocityChange);
 
             playerInputData.movementDirection.x = xDirection;
             playerInputData.movementDirection.y = zDirection;
@@ -55,9 +56,9 @@ public partial class PlayerInputSystem : SystemBase
             playerInputData.jump = jump;
 
             //Jump if button is pressed & on the ground 
-            if(jump && movementData.isGrounded) {
-                physicsVelocity.Linear.y += movementData.jumpHeight;
-            }
+            if(jump && movementData.isGrounded) 
+                rigidBodyAspect.ApplyLinearImpulseLocalSpace(Vector3.up * movementData.jumpHeight);
+            
             #endregion jumping
         }).WithoutBurst().Run();
     }

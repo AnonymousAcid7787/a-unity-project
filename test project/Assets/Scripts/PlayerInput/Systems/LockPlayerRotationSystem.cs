@@ -19,14 +19,12 @@ public partial struct LockPlayerRotationSystem : ISystem
     public void OnUpdate(ref SystemState state) {
         state.Dependency = new LockPlayerRotationJob{}.ScheduleParallel(state.Dependency);
     }
-
     
     partial struct LockPlayerRotationJob : IJobEntity {
-        
-        
         public void Execute(ref LocalTransform localTransform, in PlayerInputData data) {
             if(lockPlayerXZRotation) {
                 localTransform.Rotation.value.x = 0;
+                localTransform.Rotation.value.y = 0;
                 localTransform.Rotation.value.z = 0;
             }
         }
