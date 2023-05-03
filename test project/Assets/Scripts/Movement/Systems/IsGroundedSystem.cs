@@ -32,9 +32,6 @@ public partial struct IsGroundedSystem : ISystem {
         state.Dependency = new IsGroundedJob{
             physicsWorldSingleton = physicsWorldSingleton,
         }.Schedule(state.Dependency);
-
-        //Why do this? because this way of ground checking uses collision events. If the player is in the middle of the air, you want to reset the isGrounded bool
-        //When they are in the air after their isGrounded got reset, then it won't update to being true/false, leaving it as "false" which is accurate.
     }
 
     [BurstCompile]
