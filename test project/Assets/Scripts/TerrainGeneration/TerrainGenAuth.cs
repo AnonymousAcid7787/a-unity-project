@@ -61,11 +61,3 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
 }
 
 public struct TerrainGenTag : IComponentData {}
-
-public partial class TerrainGenSystem : SystemBase
-{
-    protected override void OnUpdate()
-    {
-        
-    }
-}
