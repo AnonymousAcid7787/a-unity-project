@@ -15,12 +15,12 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
 {
     public override void Bake(TerrainGenAuth authoring)
     {
-        int vertexCount = (authoring.xSize) * (authoring.zSize);
+        int vertexCount = (authoring.xSize + 1) * (authoring.zSize + 1);
         Vector3[] vertices = new Vector3[vertexCount];
         
         //Vertices
-        for(int i = 0,z = 0; z < authoring.zSize; z++) {
-            for(int x = 0; x < authoring.xSize; x++) {
+        for(int i = 0,z = 0; z <= authoring.zSize; z++) {
+            for(int x = 0; x <= authoring.xSize; x++) {
                 float y = Mathf.PerlinNoise(x * 0.3f, z * 0.3f) * 2f;
                 vertices[i] = new float3(x, y, z);
                 i++;
@@ -56,32 +56,12 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
     }
 }
 
-public struct TerrainGenUtils {
-    public static void DiamondSquare(ref Vector3[] vertices,
-                                     int xSize,
-                                     int zSize,
-                                     int defaultVal) {
-        if(xSize != zSize)
-            throw new System.InvalidOperationException("xSize and zSize MUST be the same!");
+public struct TerrainGenTag : IComponentData {}
+
+public partial class TerrainGenSystem : SystemBase
+{
+    protected override void OnUpdate()
+    {
         
-        int[,] grid = new int[xSize,zSize];
-
-        #region run algorithm on the grid first
-        //Set four corners
-        // grid[0, 0] = defaultVal,
-        // grid[0, ] = defaultVal,
-        // grid[0, 0] = defaultVal,
-        // grid[0, 0] = defaultVal,
-
-        for (int z = 0; z < zSize; z++) {
-            for(int x = 0; x < xSize; x++) {
-                
-            }
-        }
-        #endregion run algorithm on the grid first
     }
-}
-
-public struct TerrainGenTag : IComponentData {
-    
 }
