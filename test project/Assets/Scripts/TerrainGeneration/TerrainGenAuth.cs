@@ -83,7 +83,40 @@ public struct TerrainGenUtils {
         heightValues[size-1, 0     ] = defaultVal;
         heightValues[size-1, size-1] = defaultVal;
 
-        
-        
+        int sideLength = size-1;
+        while(sideLength >= 2) {
+            sideLength /= 2;
+            height /= 2;
+            
+            int halfSide = sideLength/2;
+            for(var r = 0; r < size-1; r += sideLength) {
+                for(var c = 0; c < size-1; c += sideLength) {
+                    int currentCell = heightValues[r, c];
+                    heightValues[r+halfSide, c+halfSide] =
+                        heightValues[r           , c             ] +
+                        heightValues[r           , c + sideLength] +
+                        heightValues[r+sideLength, c             ] +
+                        heightValues[r+sideLength, c+sideLength  ];
+
+                    heightValues[r+halfSide, c+halfSide] /= 4;
+                    
+                    double randVal = randomCmp.ValueRW.random.NextDouble(0,1);
+                    heightValues[r+halfSide, c+halfSide] += (int)(randVal * 2 * height);
+                }
+            }
+
+            for(var r = 0; r < size-1; r += halfSide) {
+                for(var c = (r + halfSide) % sideLength; c < size-1; c += sideLength) {
+                    heightValues[r, c] = 
+                        heightValues[r-halfSide, c         ] +
+                        heightValues[r         , c-halfSide] +
+                        heightValues[r         , c+halfSide] +
+                        heightValues[r+halfSide, c         ];
+                    
+                    heightValues[r, c] /= 4;
+                    
+                }
+            }
+        }
     }
 }
