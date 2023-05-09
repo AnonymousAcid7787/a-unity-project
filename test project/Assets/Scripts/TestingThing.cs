@@ -23,7 +23,7 @@ public partial class TestSystem : SystemBase
     {
         if(!SystemAPI.HasSingleton<RandomComponent>())
             return;
-        int[,] heightValues = new int[(20) , (20)];
+        int[,] heightValues = new int[(21) , (21)];
         TerrainGenUtils.DiamondSquare(ref heightValues, 10, 4, SystemAPI.GetSingletonRW<RandomComponent>());
         GUIUtility.systemCopyBuffer = heightValues.ToString();
     }

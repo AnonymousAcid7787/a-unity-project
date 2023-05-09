@@ -72,7 +72,7 @@ public struct TerrainGenUtils {
             throw new System.InvalidOperationException("Grid is too small!");
         
         if(gridHeight % 2 == 0) 
-            throw new System.InvalidOperationException("Grid size is odd!");
+            throw new System.InvalidOperationException("Grid size is even!");
 
         int maxHeight = height;
         
@@ -80,75 +80,10 @@ public struct TerrainGenUtils {
         //Set four corners
         heightValues[0     , 0     ] = defaultVal;
         heightValues[0     , size-1] = defaultVal;
-        heightValues[size-1, size-1] = defaultVal;
         heightValues[size-1, 0     ] = defaultVal;
+        heightValues[size-1, size-1] = defaultVal;
 
-        int sideLength = size-1;
-        while(sideLength >= 2) {
-            sideLength /= 2;
-            height /= 2;
-
-            int halfSide = sideLength/2;
-
-            #region square step
-            for(var sX = 0; sX < size-1; sX += sideLength) {
-                for(var sY = 0; sY < size-1; sY += sideLength) {
-                    int currentCell = heightValues[sX,sY];
-
-                    if(currentCell == -1 || currentCell == 0)
-                        continue;
-                    
-                    int avg = currentCell + 
-                            heightValues[sX+sideLength, sY           ] +
-                            heightValues[sX           , sY+sideLength] +
-                            heightValues[sX+sideLength, sY+sideLength];
-                    avg /= 4;
-
-                    double randVal = randomCmp.ValueRW.random.NextDouble(0,1);
-
-                    heightValues[sX+halfSide, sY+halfSide] =
-                        (int)(avg + randVal * 2 * height);
-                }
-            }
-            #endregion square step
-
-            #region diamond step
-            for(var dX = 0; dX < size-1; dX += halfSide) {
-                for(var dY = (dX+halfSide)%sideLength; dY < size-1; dY += sideLength) {
-                    int currentCell = heightValues[dX,dY];
-
-                    if(currentCell == -1 || currentCell == 0)
-                        continue;
-
-                    int avg = heightValues[(dX-halfSide+size-1) % (size-1), dY] +
-                              heightValues[(dX+halfSide) % (size-1)       , dY] +
-                              heightValues[dX                             ,(dY+halfSide) % (size-1)] +
-                              heightValues[dX                             ,(dY-halfSide+size-1) % (size-1)];
-                    avg /= 4;
-
-                    double randVal = randomCmp.ValueRW.random.NextDouble(0,1);
-                    avg = (int)(avg + (randVal * 2 * height) - height);
-                    
-                    if(dX == 0)  
-                        heightValues[size-1, dY] = avg;
-	                if(dY == 0)  
-                        heightValues[dX, size-1] = avg;
-                }
-
-            }
-            #endregion diamond step
         
-            for(var j = 0; j < size; j++) {
-                for(var i = 0; i < size; i++) {
-                    int currentCell = heightValues[i, j];
-
-                    if(currentCell < 0) 
-                        heightValues[i, j] = 0;
-                    
-                    if(currentCell > maxHeight) 
-                        heightValues[i, j] = maxHeight;
-                }
-            }
-        }
+        
     }
 }
