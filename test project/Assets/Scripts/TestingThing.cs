@@ -26,8 +26,10 @@ public partial class TestSystem : SystemBase
             return;
         if(!SystemAPI.HasSingleton<RandomComponent>())
             return;
-        int[,] heightValues = new int[(21) , (21)];
-        TerrainGenUtils.DiamondSquare(ref heightValues, 10, 4, SystemAPI.GetSingletonRW<RandomComponent>());
-        GUIUtility.systemCopyBuffer = heightValues.ToString();
+        
+        foundSingleton = true;
+        int[,] grid = new int[21, 21];
+        string gridStr = TerrainGenUtils.DiamondSquare2(21, 2, 1, 8, SystemAPI.GetSingletonRW<RandomComponent>()).ToString();
+        Debug.Log("Done");
     }
 }

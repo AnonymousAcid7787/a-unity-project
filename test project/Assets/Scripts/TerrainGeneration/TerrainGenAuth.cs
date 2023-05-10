@@ -62,7 +62,7 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
 public struct TerrainGenTag : IComponentData {}
 
 public struct TerrainGenUtils {
-    public static void DiamondSquare(ref int[,] heightValues, int height, int defaultVal, RefRW<RandomComponent> randomCmp) {
+    public static void DiamondSquare(ref int[,] heightValues, int roughness, int defaultVal, RefRW<RandomComponent> randomCmp) {
         int gridWidth = heightValues.GetUpperBound(1)+1;
         int gridHeight = heightValues.GetUpperBound(0)+1;
 
@@ -77,7 +77,7 @@ public struct TerrainGenUtils {
             throw new System.InvalidOperationException("Grid size is even!");
         #endregion error checking
 
-        int maxHeight = height;
+        int maxHeight = roughness;
         
         int size = gridHeight;
         //Set four corners
@@ -86,34 +86,34 @@ public struct TerrainGenUtils {
         heightValues[size-1, 0     ] = defaultVal;
         heightValues[size-1, size-1] = defaultVal;
 
-        int sideLength = size-1;
-        while(sideLength >= 2) {
-            sideLength /= 2;
-            height /= 2;
+        int chunkSize = size-1;
+        while(chunkSize >= 2) {
+            chunkSize /= 2;
+            roughness /= 2;
             
             #region square step
-            int halfSide = sideLength/2;
-            for(var r = 0; r < size-1; r += sideLength) {
-                for(var c = 0; c < size-1; c += sideLength) {
+            int halfSide = chunkSize/2;
+            for(var r = 0; r < size-1; r += chunkSize) {
+                for(var c = 0; c < size-1; c += chunkSize) {
                     int currentCell = heightValues[r, c];
 
                     //avg
                     heightValues[r+halfSide, c+halfSide] =
                         heightValues[r           , c             ] +
-                        heightValues[r           , c + sideLength] +
-                        heightValues[r+sideLength, c             ] +
-                        heightValues[r+sideLength, c+sideLength  ];
+                        heightValues[r           , c + chunkSize] +
+                        heightValues[r+chunkSize, c             ] +
+                        heightValues[r+chunkSize, c+chunkSize  ];
                     heightValues[r+halfSide, c+halfSide] /= 4;
                     
                     double randVal = randomCmp.ValueRW.random.NextDouble(0,1);
-                    heightValues[r+halfSide, c+halfSide] += (int)(randVal * 2 * height);
+                    heightValues[r+halfSide, c+halfSide] += (int)(randVal * 2 * roughness);
                 }
             }
             #endregion square step
 
             #region diamond step
-            for(var r = 0; r < size-1; r += halfSide) {
-                for(var c = (r + halfSide) % sideLength; c < size-1; c += sideLength) {
+            for(var r = 0; r < size; r += halfSide) {
+                for(var c = (r + halfSide) % chunkSize; c < size; c += chunkSize) {
 
                     //avg
                     heightValues[r, c] = 
@@ -124,10 +124,74 @@ public struct TerrainGenUtils {
                     heightValues[r, c] /= 4;
 
                     double randVal = randomCmp.ValueRW.random.NextDouble(0,1);
-                    heightValues[r, c] += (int)(randVal * 2 * height);
+                    heightValues[r, c] += (int)(randVal * 2 * roughness);
                 }
             }
             #endregion diamond step
+
+
+            GUIUtility.systemCopyBuffer = heightValues.ToString();
         }
+    }
+
+    public static int[,] DiamondSquare2(int gridSize, int roughness, int minCornerVal, int maxCornerVal, RefRW<RandomComponent> randomCmp) {
+        #region error checking
+        if(gridSize < 2)
+            throw new System.InvalidOperationException("Grid is too small!");
+        
+        if(gridSize % 2 == 0) 
+            throw new System.InvalidOperationException("Grid size is even!");
+        #endregion error checking
+
+        int[,] grid = new int[gridSize, gridSize];
+
+        #region set four corners
+        grid[0         , 0         ] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
+        grid[0         , gridSize-1] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
+        grid[gridSize-1, 0         ] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
+        grid[gridSize-1, gridSize-1] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
+        #endregion set four corners
+
+        #region the algorithm
+        int chunkSize = gridSize - 1;
+        
+        while(chunkSize > 1) {
+            int half = chunkSize / 2;
+            
+            #region square step
+            for(var y = 0; y < gridSize-1; y += chunkSize) {
+                for(var x = 0; x < gridSize-1; x += chunkSize) {
+                    grid[y+half, x+half] =
+                        grid[y          , x          ] +
+                        grid[y          , x+chunkSize] +
+                        grid[y+chunkSize, x          ] +
+                        grid[y+chunkSize, x+chunkSize];
+                    grid[y+half, x+half] /= 4;
+
+                    grid[y+half, x+half] += randomCmp.ValueRW.random.NextInt(-roughness, roughness);
+                }
+            }
+            #endregion square step
+
+            #region diamond step   
+                for(int y = 0; y < gridSize-1; y += half) {
+                    for(int x = (y+half) % chunkSize; x < gridSize-1; x += chunkSize) {
+                        grid[y, x] =
+                            grid[y-half, x] +
+                            grid[y     , x-half] +
+                            grid[y+half, x];
+                        grid[y, x] /= 4;
+
+                        grid[y, x] += randomCmp.ValueRW.random.NextInt(-roughness, roughness);
+                    }
+                }
+            #endregion diamond step
+
+            chunkSize /= 2;
+            roughness /= 2;
+        }
+        #endregion the algorithm
+
+        return grid;
     }
 }
