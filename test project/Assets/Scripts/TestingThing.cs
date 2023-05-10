@@ -19,8 +19,11 @@ public class TestBaker : Baker<TestingThing>
 
 public partial class TestSystem : SystemBase
 {
+    private static bool foundSingleton;
     protected override void OnUpdate()
     {
+        if(foundSingleton)
+            return;
         if(!SystemAPI.HasSingleton<RandomComponent>())
             return;
         int[,] heightValues = new int[(21) , (21)];

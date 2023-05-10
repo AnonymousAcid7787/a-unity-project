@@ -65,6 +65,8 @@ public struct TerrainGenUtils {
     public static void DiamondSquare(ref int[,] heightValues, int height, int defaultVal, RefRW<RandomComponent> randomCmp) {
         int gridWidth = heightValues.GetUpperBound(1)+1;
         int gridHeight = heightValues.GetUpperBound(0)+1;
+
+        #region error checking
         if(gridWidth != gridHeight)
             throw new System.InvalidOperationException("Inputted grid is not a square shape!");
         
@@ -73,6 +75,7 @@ public struct TerrainGenUtils {
         
         if(gridHeight % 2 == 0) 
             throw new System.InvalidOperationException("Grid size is even!");
+        #endregion error checking
 
         int maxHeight = height;
         
@@ -88,35 +91,43 @@ public struct TerrainGenUtils {
             sideLength /= 2;
             height /= 2;
             
+            #region square step
             int halfSide = sideLength/2;
             for(var r = 0; r < size-1; r += sideLength) {
                 for(var c = 0; c < size-1; c += sideLength) {
                     int currentCell = heightValues[r, c];
+
+                    //avg
                     heightValues[r+halfSide, c+halfSide] =
                         heightValues[r           , c             ] +
                         heightValues[r           , c + sideLength] +
                         heightValues[r+sideLength, c             ] +
                         heightValues[r+sideLength, c+sideLength  ];
-
                     heightValues[r+halfSide, c+halfSide] /= 4;
                     
                     double randVal = randomCmp.ValueRW.random.NextDouble(0,1);
                     heightValues[r+halfSide, c+halfSide] += (int)(randVal * 2 * height);
                 }
             }
+            #endregion square step
 
+            #region diamond step
             for(var r = 0; r < size-1; r += halfSide) {
                 for(var c = (r + halfSide) % sideLength; c < size-1; c += sideLength) {
+
+                    //avg
                     heightValues[r, c] = 
                         heightValues[r-halfSide, c         ] +
                         heightValues[r         , c-halfSide] +
                         heightValues[r         , c+halfSide] +
                         heightValues[r+halfSide, c         ];
-                    
                     heightValues[r, c] /= 4;
-                    
+
+                    double randVal = randomCmp.ValueRW.random.NextDouble(0,1);
+                    heightValues[r, c] += (int)(randVal * 2 * height);
                 }
             }
+            #endregion diamond step
         }
     }
 }
