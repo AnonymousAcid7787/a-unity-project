@@ -20,18 +20,24 @@ public class TestBaker : Baker<TestingThing>
 public partial class TestSystem : SystemBase
 {
     private static bool foundSingleton;
+    protected override void OnCreate() {
+        foundSingleton = false;
+    }
+
     protected override void OnUpdate()
     {
+        return;
         if(foundSingleton)
             return;
         if(!SystemAPI.HasSingleton<RandomComponent>())
             return;
         
         foundSingleton = true;
-        int[,] grid = TerrainGenUtils.DiamondSquare(21, 2, 1, 8, SystemAPI.GetSingletonRW<RandomComponent>());
+        uint seed = SystemAPI.GetSingletonRW<RandomComponent>().ValueRW.random.state;
+        int[,] grid = TerrainGenUtils.DiamondSquare(129, 2, 1, 28, new Unity.Mathematics.Random(seed));
         string str = "";
-        for(var y = 0; y < 21; y++) {
-            for(var x = 0; x < 21; x++) {
+        for(var y = 0; y < 129; y++) {
+            for(var x = 0; x < 129; x++) {
                 str += grid[y, x] + ",";
             }
             str += "\n";
