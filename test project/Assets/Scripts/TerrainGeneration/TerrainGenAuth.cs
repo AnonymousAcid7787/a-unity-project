@@ -61,7 +61,7 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
 
 public struct TerrainGenTag : IComponentData {}
 
-public struct TerrainGenUtils {
+public class TerrainGenUtils {
     public static void DiamondSquare(ref int[,] heightValues, int roughness, int defaultVal, RefRW<RandomComponent> randomCmp) {
         int gridWidth = heightValues.GetUpperBound(1)+1;
         int gridHeight = heightValues.GetUpperBound(0)+1;
@@ -134,7 +134,7 @@ public struct TerrainGenUtils {
         }
     }
 
-    public static int[,] DiamondSquare2(int gridSize, int roughness, int minCornerVal, int maxCornerVal, RefRW<RandomComponent> randomCmp) {
+    public static int[,] DiamondSquare2(int gridSize, int roughness, int minHeight, int maxHeight, RefRW<RandomComponent> randomCmp) {
         #region error checking
         if(gridSize < 2)
             throw new System.InvalidOperationException("Grid is too small!");
@@ -146,10 +146,10 @@ public struct TerrainGenUtils {
         int[,] grid = new int[gridSize, gridSize];
 
         #region set four corners
-        grid[0         , 0         ] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
-        grid[0         , gridSize-1] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
-        grid[gridSize-1, 0         ] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
-        grid[gridSize-1, gridSize-1] = randomCmp.ValueRW.random.NextInt(minCornerVal, maxCornerVal);
+        grid[0         , 0         ] = randomCmp.ValueRW.random.NextInt(minHeight, maxHeight);
+        grid[0         , gridSize-1] = randomCmp.ValueRW.random.NextInt(minHeight, maxHeight);
+        grid[gridSize-1, 0         ] = randomCmp.ValueRW.random.NextInt(minHeight, maxHeight);
+        grid[gridSize-1, gridSize-1] = randomCmp.ValueRW.random.NextInt(minHeight, maxHeight);
         #endregion set four corners
 
         #region the algorithm
@@ -158,6 +158,7 @@ public struct TerrainGenUtils {
         while(chunkSize > 1) {
             int half = chunkSize / 2;
             
+            //This is good
             #region square step
             for(var y = 0; y < gridSize-1; y += chunkSize) {
                 for(var x = 0; x < gridSize-1; x += chunkSize) {
@@ -174,12 +175,17 @@ public struct TerrainGenUtils {
             #endregion square step
 
             #region diamond step   
-                for(int y = 0; y < gridSize-1; y += half) {
-                    for(int x = (y+half) % chunkSize; x < gridSize-1; x += chunkSize) {
+                for(int y = 0; y < half; y += half) {
+                    for(int x = (y+half) % chunkSize; x < chunkSize; x += chunkSize) {
+                        int up = y-half >= 0 ? grid[y-half, x] : 0;
+                        int down = y+half < gridSize ? grid[y, x-half] : 0;
+                        int left = 
+
                         grid[y, x] =
-                            grid[y-half, x] +
-                            grid[y     , x-half] +
-                            grid[y+half, x];
+                            up +
+                             +
+                            grid[y     , x+half] +
+                            grid[y+half, x     ];
                         grid[y, x] /= 4;
 
                         grid[y, x] += randomCmp.ValueRW.random.NextInt(-roughness, roughness);
