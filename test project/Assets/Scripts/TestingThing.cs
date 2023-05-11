@@ -28,8 +28,15 @@ public partial class TestSystem : SystemBase
             return;
         
         foundSingleton = true;
-        int[,] grid = new int[21, 21];
-        string gridStr = TerrainGenUtils.DiamondSquare2(21, 2, 1, 8, SystemAPI.GetSingletonRW<RandomComponent>()).ToString();
+        int[,] grid = TerrainGenUtils.DiamondSquare(21, 2, 1, 8, SystemAPI.GetSingletonRW<RandomComponent>());
+        string str = "";
+        for(var y = 0; y < 21; y++) {
+            for(var x = 0; x < 21; x++) {
+                str += grid[y, x] + ",";
+            }
+            str += "\n";
+        }
+        GUIUtility.systemCopyBuffer = str;
         Debug.Log("Done");
     }
 }
