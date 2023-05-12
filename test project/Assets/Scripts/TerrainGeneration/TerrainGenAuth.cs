@@ -22,14 +22,24 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
         int size = authoring.size % 2 == 0 ? authoring.size+1 : authoring.size;
         
         Unity.Mathematics.Random random = new Unity.Mathematics.Random((uint)authoring.seed);
-        int[,] grid = TerrainGenUtils.DiamondSquare(size, authoring.roughness, authoring.minHeight, authoring.maxHeight, random);
+        float[,] grid = TerrainGenUtils.DiamondSquareFloat(size, authoring.roughness, authoring.minHeight, authoring.maxHeight, random);
 
         int vertexCount = (size + 1) * (size + 1);
         Vector3[] vertices = new Vector3[vertexCount];
         int[] triangles = new int[size * size * 6];
 
+        string str = "";
+        for(var y = 0; y < size; y++) {
+            for(var x = 0; x < size; x++) {
+                str += grid[y, x] + ",";
+            }
+            str += "\n";
+        }
+        GUIUtility.systemCopyBuffer = str;
+
+        Debug.Log("Done");
         #region vertices
-        //Set vertex x & z values
+        //Set vertex values
         for(int i = 0,z = 0; z <= size; z++) {
             for(int x = 0; x <= size; x++) {
                 // float y = Mathf.PerlinNoise(x*0.3f, z*0.3f)*2;
@@ -37,7 +47,6 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
                 i++;
             }
         }
-        
         #endregion vertices
 
         #region triangles
@@ -189,6 +198,70 @@ public class TerrainGenUtils {
                     grid[y, x] /= 4;
 
                     grid[y, x] += random.NextInt(-roughness, roughness);
+                }
+            }
+            #endregion diamond step
+
+            chunkSize /= 2;
+            roughness /= 2;
+        }
+        #endregion the algorithm
+
+        return grid;
+    }
+
+    public static float[,] DiamondSquareFloat(int gridSize, int roughness, int minHeight, int maxHeight, Unity.Mathematics.Random random) {
+        #region error checking
+        if(gridSize < 2)
+            throw new System.InvalidOperationException("Grid is too small!");
+        
+        if(gridSize % 2 == 0) 
+            throw new System.InvalidOperationException("Grid size is even!");
+        #endregion error checking
+
+        float[,] grid = new float[gridSize, gridSize];
+
+        #region set four corners
+        grid[0         , 0         ] = random.NextFloat(minHeight, maxHeight);
+        grid[0         , gridSize-1] = random.NextFloat(minHeight, maxHeight);
+        grid[gridSize-1, 0         ] = random.NextFloat(minHeight, maxHeight);
+        grid[gridSize-1, gridSize-1] = random.NextFloat(minHeight, maxHeight);
+        #endregion set four corners
+
+        #region the algorithm
+        int chunkSize = gridSize - 1;
+        
+        while(chunkSize > 1) {
+            int half = chunkSize / 2;
+            
+            //This is good
+            #region square step
+            for(var y = 0; y < gridSize-1; y += chunkSize) {
+                for(var x = 0; x < gridSize-1; x += chunkSize) {
+                    grid[y+half, x+half] =
+                        grid[y          , x          ] +
+                        grid[y          , x+chunkSize] +
+                        grid[y+chunkSize, x          ] +
+                        grid[y+chunkSize, x+chunkSize];
+                    grid[y+half, x+half] /= 4;
+
+                    grid[y+half, x+half] += random.NextFloat(-roughness, roughness);
+                }
+            }
+            #endregion square step
+
+            #region diamond step   
+            for(var y = 0; y < gridSize; y += half) {
+                for(var x = (y+half) % chunkSize; x < gridSize; x += chunkSize) {
+                    float up = y-half >= 0         ? grid[y-half, x] : 0;
+                    float down = y+half < gridSize ? grid[y+half, x] : 0;
+                    float left = x-half >= 0       ? grid[y, x-half] : 0;
+                    float right = x+half < gridSize? grid[y, x+half] : 0;
+                    
+                    grid[y, x] = up+down+left+right;
+                    grid[y, x] /= 4;
+
+                    grid[y, x] += random.NextFloat(-roughness, roughness);
                 }
             }
             #endregion diamond step
