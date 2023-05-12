@@ -28,22 +28,18 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
         Vector3[] vertices = new Vector3[vertexCount];
         int[] triangles = new int[size * size * 6];
 
-        string str = "";
-        for(var y = 0; y < size; y++) {
-            for(var x = 0; x < size; x++) {
-                str += grid[y, x] + ",";
-            }
-            str += "\n";
-        }
-        GUIUtility.systemCopyBuffer = str;
 
-        Debug.Log("Done");
         #region vertices
         //Set vertex values
         for(int i = 0,z = 0; z <= size; z++) {
             for(int x = 0; x <= size; x++) {
-                // float y = Mathf.PerlinNoise(x*0.3f, z*0.3f)*2;
                 vertices[i] = new float3(x, 0, z);
+                i++;
+            }
+        }
+        for(int i = 0,z = 0; z < size; z++) {
+            for(int x = 0; x < size; x++) {
+                vertices[i].y = grid[z,x];
                 i++;
             }
         }
@@ -89,6 +85,9 @@ public class TerrainGenUtils {
         
         if(gridSize % 2 == 0) 
             throw new System.InvalidOperationException("Grid size is even!");
+
+        if(Mathf.Log((float)gridSize-1, 2)%1 != 0)
+            throw new System.InvalidOperationException("Grid size is is not \"(n^2)+1!\"");
         #endregion error checking
 
         int[,] grid = new int[gridSize, gridSize];
@@ -125,13 +124,33 @@ public class TerrainGenUtils {
             #region diamond step   
             for(var y = 0; y < gridSize; y += half) {
                 for(var x = (y+half) % chunkSize; x < gridSize; x += chunkSize) {
-                    int up = y-half >= 0         ? grid[y-half, x] : 0;
-                    int down = y+half < gridSize ? grid[y+half, x] : 0;
-                    int left = x-half >= 0       ? grid[y, x-half] : 0;
-                    int right = x+half < gridSize? grid[y, x+half] : 0;
+                    int up = 0;
+                    int down = 0;
+                    int left = 0;
+                    int right = 0;
+
+                    int count = 0;
+                    #region diamond corners
+                    if(y-half >= 0) {//up
+                        up = grid[y-half, x];
+                        count ++;
+                    }
+                    if(y+half < gridSize) {//down
+                        down = grid[y+half, x];
+                        count++;
+                    }
+                    if(x-half >= 0) {//left
+                        left = grid[y, x-half];
+                        count++;
+                    }
+                    if(x+half < gridSize) {//right
+                        right = grid[y, x+half];
+                        count++;
+                    }
+                    #endregion diamond corners
                     
                     grid[y, x] = up+down+left+right;
-                    grid[y, x] /= 4;
+                    grid[y, x] /= count;
 
                     grid[y, x] += randomCmp.ValueRW.random.NextInt(-roughness, roughness);
                 }
@@ -153,6 +172,9 @@ public class TerrainGenUtils {
         
         if(gridSize % 2 == 0) 
             throw new System.InvalidOperationException("Grid size is even!");
+
+        if(Mathf.Log((float)gridSize-1, 2)%1 != 0)
+            throw new System.InvalidOperationException("Grid size is is not \"(n^2)+1!\"");
         #endregion error checking
 
         int[,] grid = new int[gridSize, gridSize];
@@ -189,13 +211,33 @@ public class TerrainGenUtils {
             #region diamond step   
             for(var y = 0; y < gridSize; y += half) {
                 for(var x = (y+half) % chunkSize; x < gridSize; x += chunkSize) {
-                    int up = y-half >= 0         ? grid[y-half, x] : 0;
-                    int down = y+half < gridSize ? grid[y+half, x] : 0;
-                    int left = x-half >= 0       ? grid[y, x-half] : 0;
-                    int right = x+half < gridSize? grid[y, x+half] : 0;
+                    int up = 0;
+                    int down = 0;
+                    int left = 0;
+                    int right = 0;
+
+                    int count = 0;
+                    #region diamond corners
+                    if(y-half >= 0) {//up
+                        up = grid[y-half, x];
+                        count ++;
+                    }
+                    if(y+half < gridSize) {//down
+                        down = grid[y+half, x];
+                        count++;
+                    }
+                    if(x-half >= 0) {//left
+                        left = grid[y, x-half];
+                        count++;
+                    }
+                    if(x+half < gridSize) {//right
+                        right = grid[y, x+half];
+                        count++;
+                    }
+                    #endregion diamond corners
                     
                     grid[y, x] = up+down+left+right;
-                    grid[y, x] /= 4;
+                    grid[y, x] /= count;
 
                     grid[y, x] += random.NextInt(-roughness, roughness);
                 }
@@ -217,6 +259,9 @@ public class TerrainGenUtils {
         
         if(gridSize % 2 == 0) 
             throw new System.InvalidOperationException("Grid size is even!");
+
+        if(Mathf.Log((float)gridSize-1, 2)%1 != 0)
+            throw new System.InvalidOperationException("Grid size is is not \"(n^2)+1!\"");
         #endregion error checking
 
         float[,] grid = new float[gridSize, gridSize];
@@ -253,13 +298,33 @@ public class TerrainGenUtils {
             #region diamond step   
             for(var y = 0; y < gridSize; y += half) {
                 for(var x = (y+half) % chunkSize; x < gridSize; x += chunkSize) {
-                    float up = y-half >= 0         ? grid[y-half, x] : 0;
-                    float down = y+half < gridSize ? grid[y+half, x] : 0;
-                    float left = x-half >= 0       ? grid[y, x-half] : 0;
-                    float right = x+half < gridSize? grid[y, x+half] : 0;
+                    float up = 0;
+                    float down = 0;
+                    float left = 0;
+                    float right = 0;
+
+                    int count = 0;
+                    #region diamond corners
+                    if(y-half >= 0) {//up
+                        up = grid[y-half, x];
+                        count++;
+                    }
+                    if(y+half < gridSize) {//down
+                        down = grid[y+half, x];
+                        count++;
+                    }
+                    if(x-half >= 0) {//left
+                        left = grid[y, x-half];
+                        count++;
+                    }
+                    if(x+half < gridSize) {//right
+                        right = grid[y, x+half];
+                        count++;
+                    }
+                    #endregion diamond corners
                     
                     grid[y, x] = up+down+left+right;
-                    grid[y, x] /= 4;
+                    grid[y, x] /= count;
 
                     grid[y, x] += random.NextFloat(-roughness, roughness);
                 }
