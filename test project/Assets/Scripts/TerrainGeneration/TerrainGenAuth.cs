@@ -19,35 +19,35 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
 {
     public override void Bake(TerrainGenAuth authoring)
     {
-        int xSize = authoring.size % 2 == 0 ? authoring.size+1 : authoring.size;
-        int zSize = xSize;
+        int size = authoring.size % 2 == 0 ? authoring.size+1 : authoring.size;
         
         Unity.Mathematics.Random random = new Unity.Mathematics.Random((uint)authoring.seed);
-        int[,] grid = TerrainGenUtils.DiamondSquare(xSize, authoring.roughness, authoring.minHeight, authoring.maxHeight, random);
+        int[,] grid = TerrainGenUtils.DiamondSquare(size, authoring.roughness, authoring.minHeight, authoring.maxHeight, random);
 
-        Vector3[] vertices = new Vector3[(xSize+1) * (zSize+1)];
-        for(int i = 0,z = 0; z < zSize; z++) {
-            for(int x = 0; x < xSize; x++) {
-                float y = grid[z, x];
-                vertices[i] = new float3(x, y, z);
+        int vertexCount = (size + 1) * (size + 1);
+        Vector3[] vertices = new Vector3[vertexCount];
+        int[] triangles = new int[size * size * 6];
+
+        //Vertices
+        for(int i = 0,z = 0; z <= size; z++) {
+            for(int x = 0; x <= size; x++) {
+                // float y = Mathf.PerlinNoise(x*0.3f, z*0.3f)*2;
+                vertices[i] = new float3(x, 0, z);
                 i++;
             }
         }
 
-
         //Triangles
         int vert = 0;
         int tris = 0;
-        int triangleCount = xSize * zSize * 6;
-        int[] triangles = new int[triangleCount];
-        for (int z = 0; z < zSize; z++) {
-            for(int x = 0; x < xSize; x++) {
+        for (int z = 0; z < size; z++) {
+            for(int x = 0; x < size; x++) {
                 triangles[tris + 0] = vert + 0;
-                triangles[tris + 1] = vert + xSize + 1;
+                triangles[tris + 1] = vert + size + 1;
                 triangles[tris + 2] = vert + 1;
                 triangles[tris + 3] = vert + 1;
-                triangles[tris + 4] = vert + xSize + 1;
-                triangles[tris + 5] = vert + xSize + 2;
+                triangles[tris + 4] = vert + size + 1;
+                triangles[tris + 5] = vert + size + 2;
 
                 vert++;
                 tris += 6;
@@ -58,7 +58,8 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
-        mesh.name = "Terrain Mesh";
+        mesh.RecalculateBounds();
+        mesh.RecalculateNormals();
         authoring.gameObject.GetComponent<MeshFilter>().mesh = mesh;
 
         AddComponent(GetEntity(TransformUsageFlags.None), new TerrainGenTag{});
