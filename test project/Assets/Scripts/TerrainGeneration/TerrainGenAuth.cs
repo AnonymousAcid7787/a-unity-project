@@ -28,7 +28,8 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
         Vector3[] vertices = new Vector3[vertexCount];
         int[] triangles = new int[size * size * 6];
 
-        //Vertices
+        #region vertices
+        //Set vertex x & z values
         for(int i = 0,z = 0; z <= size; z++) {
             for(int x = 0; x <= size; x++) {
                 // float y = Mathf.PerlinNoise(x*0.3f, z*0.3f)*2;
@@ -36,8 +37,10 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
                 i++;
             }
         }
+        
+        #endregion vertices
 
-        //Triangles
+        #region triangles
         int vert = 0;
         int tris = 0;
         for (int z = 0; z < size; z++) {
@@ -54,6 +57,7 @@ public class TerrainGenBaker : Baker<TerrainGenAuth>
             }
             vert++; 
         }
+        #endregion triangles
 
         Mesh mesh = new Mesh();
         mesh.vertices = vertices;
