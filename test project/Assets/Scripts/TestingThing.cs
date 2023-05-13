@@ -35,8 +35,8 @@ public partial class TestSystem : SystemBase
         // uint seed = SystemAPI.GetSingletonRW<RandomComponent>().ValueRW.random.state;
         // int[,] grid = TerrainGenUtils.DiamondSquare(129, 2, 1, 28, new Unity.Mathematics.Random(seed));
         // string str = "";
-        // for(var y = 0; y < 129; y++) {
-        //     for(var x = 0; x < 129; x++) {
+        // for(var y = 0; y < xSize; y++) {
+        //     for(var x = 0; x < zSize; x++) {
         //         str += grid[y, x] + ",";
         //     }
         //     str += "\n";

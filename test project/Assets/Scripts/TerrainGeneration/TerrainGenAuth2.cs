@@ -284,11 +284,10 @@ public class TerrainGenUtils {
             for(var y = 0; y < gridSize-1; y += chunkSize) {
                 for(var x = 0; x < gridSize-1; x += chunkSize) {
                     grid[y+half, x+half] =
-                        grid[y          , x          ] +
+                        (grid[y          , x          ] +
                         grid[y          , x+chunkSize] +
                         grid[y+chunkSize, x          ] +
-                        grid[y+chunkSize, x+chunkSize];
-                    grid[y+half, x+half] /= 4;
+                        grid[y+chunkSize, x+chunkSize])/4;
 
                     grid[y+half, x+half] += random.NextFloat(-roughness, roughness);
                 }
@@ -323,9 +322,8 @@ public class TerrainGenUtils {
                     }
                     #endregion diamond corners
                     
-                    grid[y, x] = up+down+left+right;
-                    grid[y, x] /= count;
-
+                    grid[y, x] = (up+down+left+right)/count;
+                    
                     grid[y, x] += random.NextFloat(-roughness, roughness);
                 }
             }
