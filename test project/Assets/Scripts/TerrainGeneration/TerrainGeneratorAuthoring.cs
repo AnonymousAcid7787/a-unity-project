@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
+using Unity.Mathematics;
 
 public class TerrainGeneratorAuthoring : MonoBehaviour
 {
@@ -181,7 +182,7 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
                 for(int octave = 0; octave < octaves; octave++) {
                     float sampleX = x * cellFrequency;
                     float sampleY = y * cellFrequency;
-                    cellElevation += Mathf.PerlinNoise(sampleX, sampleY) * cellAmplitude;
+                    cellElevation += noise.snoise(new float2(sampleX, sampleY)) * cellAmplitude;
 
                     cellFrequency *= lacunarity;
                     cellAmplitude *= persistence;
