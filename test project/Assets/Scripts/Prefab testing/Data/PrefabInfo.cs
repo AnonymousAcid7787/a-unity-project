@@ -22,7 +22,7 @@ public class PrefabInfoBaker : Baker<PrefabInfo>
     public override void Bake(PrefabInfo authoring)
     {
         AddComponent(GetEntity(TransformUsageFlags.None), new PrefabInfoComponent {
-            prefab = GetEntity(TransformUsageFlags.Renderable),
+            prefab = GetEntity(authoring.prefab, TransformUsageFlags.Renderable),
             prefabType = authoring.prefabType,
         });
     }

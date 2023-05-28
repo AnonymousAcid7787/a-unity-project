@@ -26,7 +26,6 @@ public partial struct RespawnPrefabSystem : ISystem {
     
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-        //var is BeginSimulationEntityCommandBufferSystem.Singleton if ur confused
         var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
 
         new RespawnPrefabJob {
@@ -38,6 +37,7 @@ public partial struct RespawnPrefabSystem : ISystem {
 
 [BurstCompile]
 public partial struct RespawnPrefabJob : IJobEntity {
+    [WriteOnly]
     public EntityCommandBuffer ecb;
 
     [ReadOnly]
@@ -46,6 +46,7 @@ public partial struct RespawnPrefabJob : IJobEntity {
 
     [BurstCompile]
     public void Execute(in Entity self, in RespawnPrefabComponent respawnData) {
+        
         Entity prefab = Entity.Null;
 
         for(var i = 0; i < prefabs.Length; i++) {
@@ -61,7 +62,7 @@ public partial struct RespawnPrefabJob : IJobEntity {
         }
 
         Entity newEntity = ecb.Instantiate(prefab);
-        ecb.SetComponent(newEntity, LocalTransform.FromPosition(respawnData.position));
+        ecb.AddComponent(newEntity, LocalTransform.FromPosition(respawnData.position));
 
         ecb.DestroyEntity(self);
     }
