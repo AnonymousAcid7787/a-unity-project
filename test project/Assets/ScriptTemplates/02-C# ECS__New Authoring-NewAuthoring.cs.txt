@@ -1,0 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.Entities;
+
+    #ROOTNAMESPACEBEGIN#
+public struct #SCRIPTNAME# : IComponentData {
+#NOTRIM#
+}
+
+public class #SCRIPTNAME#Authoring : MonoBehaviour {
+    #NOTRIM#
+}
+
+public class #SCRIPTNAME#Baker : Baker<#SCRIPTNAME#Authoring> {
+    public override void Bake(#SCRIPTNAME#Authoring authoring) {
+
+    }
+}
+#ROOTNAMESPACEEND#
