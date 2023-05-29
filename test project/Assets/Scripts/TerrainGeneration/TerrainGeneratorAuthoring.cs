@@ -24,7 +24,7 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
     {
         int chunkSize = authoring.chunkSize;
 
-        int[,,] voxelMap = new int[chunkSize, chunkSize, chunkSize];
+        Flat3DArrayUnmanaged<int> voxelMap = new Flat3DArrayUnmanaged<int>(chunkSize, chunkSize, chunkSize);
 
         int[,] noiseGrid = FractalNoiseInt(
             authoring.chunkPosition.x, authoring.chunkPosition.y,
@@ -44,13 +44,11 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
         }
         
         int arrayLength = chunkSize*chunkSize*chunkSize;
-        int[] flatArrayManaged = Utils.Flatten3DArray(voxelMap, chunkSize, chunkSize, chunkSize);
-        NativeArray<int> voxelMapFlattened = new NativeArray<int>(flatArrayManaged, Allocator.Persistent);
 
         AddComponent(GetEntity(TransformUsageFlags.None), new TerrainGeneratorComponent{
             chunkSize = chunkSize,
             mapSize = chunkSize,
-            voxelMapFlattened = voxelMapFlattened
+            voxelMap = voxelMap
         });
     }
     
@@ -110,7 +108,7 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
 }
 
 public struct TerrainGeneratorComponent : IComponentData {
-    public NativeArray<int> voxelMapFlattened;/*flattened 3D array*/
+    public Flat3DArrayUnmanaged<int> voxelMap;
     public int mapSize;
     public int chunkSize;
 }
