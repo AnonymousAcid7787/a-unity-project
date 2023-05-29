@@ -9,7 +9,7 @@ public struct #SCRIPTNAME# : IComponentData {
 }
 
 public class #SCRIPTNAME#Authoring : MonoBehaviour {
-    #NOTRIM#
+#NOTRIM#
 }
 
 public class #SCRIPTNAME#Baker : Baker<#SCRIPTNAME#Authoring> {

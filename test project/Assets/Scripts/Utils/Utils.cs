@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -20,5 +21,37 @@ public struct Utils
         }
 
         return array;
+    }
+}
+
+/** <summary>
+* Unmanaged struct that acts as a 3D array, but is a flat NativeArray.
+* Use it like a regular 3d array (Ex. array[1, 2, 5])
+* </summary> 
+*/
+public struct Flat3DArrayUnmanaged<T> where T : unmanaged {
+    NativeArray<T> flatArray;
+    int width;
+    int height;
+    int depth;
+
+    public Flat3DArrayUnmanaged(int _width, int _height, int _depth) {
+
+        width = _width;
+        height = _height;
+        depth = _depth;
+        
+        flatArray = new NativeArray<T>(width*height*depth, Allocator.Persistent);
+    }
+
+    public T this[int x, int y, int z] {
+
+        get {
+            return flatArray[x + height * (y + depth * z)];
+        }
+        set {
+            flatArray[x + height * (y + depth * z)] = value;
+        }
+        
     }
 }
