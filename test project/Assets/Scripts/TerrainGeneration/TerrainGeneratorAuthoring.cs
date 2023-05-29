@@ -6,8 +6,9 @@ using Unity.Mathematics;
 
 public class TerrainGeneratorAuthoring : MonoBehaviour
 {
-    public int width;
-    public int height;
+    public int2 chunkPosition;
+    public int chunkWidth = 10;
+    public int chunkHeight = 10;
     public int minHeight = 1;
     public int maxHeight = 8;
     public float frequency;
@@ -20,64 +21,26 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
 {
     public override void Bake(TerrainGeneratorAuthoring authoring)
     {
-        int xSize = authoring.width;
-        int zSize = authoring.height;
+        int xSize = authoring.chunkWidth;
+        int zSize = authoring.chunkHeight;
         float[,] grid = FractalNoise(
-            xSize,
-            zSize,
-            authoring.minHeight,
-            authoring.maxHeight,
+            authoring.chunkPosition.x, authoring.chunkPosition.y,
+            authoring.chunkWidth, authoring.chunkHeight,
+            authoring.minHeight, authoring.maxHeight,
             authoring.frequency,
             authoring.octaves,
             authoring.lacunarity,
-            authoring.persistence);
+            authoring.persistence
+        );
 
-        int vertexCount = (xSize + 1) * (zSize + 1);
-        Vector3[] vertices = new Vector3[vertexCount];
-        int[] triangles = new int[xSize * zSize * 6];
 
-        #region vertices
-        //Set vertex values
-        for(int i = 0,z = 0; z <= zSize; z++) {
-            for(int x = 0; x <= xSize; x++) {
-                vertices[i] = new Vector3(x, 0, z);
-                i++;
-            }
-        }
-        #endregion vertices
 
-        #region triangles
-        int vert = 0;
-        int tris = 0;
-        for (int z = 0; z < zSize; z++) {
-            for(int x = 0; x < xSize; x++) {
-                triangles[tris + 0] = vert + 0;
-                triangles[tris + 1] = vert + xSize + 1;
-                triangles[tris + 2] = vert + 1;
-                triangles[tris + 3] = vert + 1;
-                triangles[tris + 4] = vert + xSize + 1;
-                triangles[tris + 5] = vert + xSize + 2;
-
-                vert++;
-                tris += 6;
-            }
-            vert++; 
-        }
-        #endregion triangles
-
-        for(int i = 0,z = 0; z < zSize; z++) {
-            for(int x = 0; x < xSize; x++) {
-                vertices[i].y = grid[z, x];
-                i++;
-            }
-        }
-
-        Mesh mesh = new Mesh();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.RecalculateBounds();
-        mesh.RecalculateNormals();
-        authoring.gameObject.GetComponent<MeshFilter>().mesh = mesh;
+        // Mesh mesh = new Mesh();
+        // mesh.vertices = vertices;
+        // mesh.triangles = triangles;
+        // mesh.RecalculateBounds();
+        // mesh.RecalculateNormals();
+        // authoring.gameObject.GetComponent<MeshFilter>().mesh = mesh;
     }
 
     
@@ -167,32 +130,30 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
     }
     
 
-    public static float[,] FractalNoise(int gridWidth, int gridHeight, int minHeight, int maxHeight, float frequency, int octaves, float lacunarity, float persistence) {
+    public static float[,] FractalNoise(int chunkX, int chunkY, int gridWidth, int gridHeight, int minHeight, int maxHeight, float frequency, int octaves, float lacunarity, float persistence) {
 
-        float[,] grid = new float[gridHeight, gridWidth];
-        float amplitude = maxHeight/2f;
+		float[,] grid = new float[gridHeight, gridWidth];
+		float amplitude = maxHeight/2f;
 
-        for(int y = 0; y < gridHeight; y++) {
-            for(int x = 0; x < gridWidth; x++) {
-                float cellElevation = amplitude;
-                float cellFrequency = frequency;
-                float cellAmplitude = amplitude;
+		for(int y = chunkX; y < gridHeight; y++) {
+			for(int x = chunkY; x < gridWidth; x++) {
+				float cellElevation = amplitude;
+				float tFrequency = frequency;
+				float tAmplitude = amplitude;
 
-                //Perlin noise octaves
-                for(int octave = 0; octave < octaves; octave++) {
-                    float sampleX = x * cellFrequency;
-                    float sampleY = y * cellFrequency;
-                    cellElevation += noise.snoise(new float2(sampleX, sampleY)) * cellAmplitude;
+				for(int octave = 0; octave < octaves; octave++) {
+                    float2 sampleVec = new float2(x * tFrequency, y * tFrequency);
+					cellElevation += noise.snoise(sampleVec) * tAmplitude;
 
-                    cellFrequency *= lacunarity;
-                    cellAmplitude *= persistence;
-                }
+					tFrequency *= lacunarity;
+					tAmplitude *= persistence;
+				}
 
-                cellElevation = Mathf.Clamp(cellElevation, minHeight, maxHeight);
-                grid[y, x] = cellElevation;
-            }
-        }
+				cellElevation = Mathf.Clamp(cellElevation, minHeight, maxHeight);
+				grid[y, x] = cellElevation;
+			}
+		}
 
-        return grid;
-    }
+		return grid;
+	}
 }
