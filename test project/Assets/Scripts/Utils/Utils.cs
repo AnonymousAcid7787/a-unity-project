@@ -35,13 +35,13 @@ public struct Flat3DArrayUnmanaged<T> where T : unmanaged {
     int height;
     int depth;
 
-    public Flat3DArrayUnmanaged(int _width, int _height, int _depth) {
+    public Flat3DArrayUnmanaged(int _width, int _height, int _depth, Allocator allocator) {
 
         width = _width;
         height = _height;
         depth = _depth;
         
-        flatArray = new NativeArray<T>(width*height*depth, Allocator.Persistent);
+        flatArray = new NativeArray<T>(width*height*depth, allocator);
     }
 
     public T this[int x, int y, int z] {
@@ -52,6 +52,6 @@ public struct Flat3DArrayUnmanaged<T> where T : unmanaged {
         set {
             flatArray[x + height * (y + depth * z)] = value;
         }
-        
+
     }
 }

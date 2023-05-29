@@ -24,7 +24,7 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
     {
         int chunkSize = authoring.chunkSize;
 
-        Flat3DArrayUnmanaged<int> voxelMap = new Flat3DArrayUnmanaged<int>(chunkSize, chunkSize, chunkSize);
+        Flat3DArrayUnmanaged<int> voxelMap = new Flat3DArrayUnmanaged<int>(chunkSize, chunkSize, chunkSize,  Allocator.Persistent);
 
         int[,] noiseGrid = FractalNoiseInt(
             authoring.chunkPosition.x, authoring.chunkPosition.y,
