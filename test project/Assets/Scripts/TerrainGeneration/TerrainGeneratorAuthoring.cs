@@ -24,7 +24,7 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
     {
         int chunkSize = authoring.chunkSize;
 
-        Flat3DArrayUnmanaged<int> voxelMap = new Flat3DArrayUnmanaged<int>(chunkSize, chunkSize, chunkSize,  Allocator.Persistent);
+        TerrainMap voxelMap = new TerrainMap(chunkSize, chunkSize);
 
         int[,] noiseGrid = FractalNoiseInt(
             authoring.chunkPosition.x, authoring.chunkPosition.y,
@@ -45,11 +45,7 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
         
         int arrayLength = chunkSize*chunkSize*chunkSize;
 
-        AddComponent(GetEntity(TransformUsageFlags.None), new TerrainGeneratorComponent{
-            chunkSize = chunkSize,
-            mapSize = chunkSize,
-            voxelMap = voxelMap
-        });
+        AddComponent(GetEntity(TransformUsageFlags.None), voxelMap);
     }
     
     public static float[,] FractalNoise(int chunkX, int chunkY, int gridWidth, int gridHeight, int minHeight, int maxHeight, float frequency, int octaves, float lacunarity, float persistence) {
@@ -107,8 +103,26 @@ public class TerrainGeneratorBaker : Baker<TerrainGeneratorAuthoring>
 	}
 }
 
-public struct TerrainGeneratorComponent : IComponentData {
-    public Flat3DArrayUnmanaged<int> voxelMap;
-    public int mapSize;
-    public int chunkSize;
+public struct TerrainMap : IComponentData {
+    NativeList<int> mapArray;
+    int mapSize;
+    int chunkSize;
+
+    public TerrainMap(int mapSize, int chunkSize) {
+        this.mapSize = mapSize;
+        this.chunkSize = chunkSize;
+        
+        mapArray = new NativeList<int>(mapSize*mapSize*mapSize, Allocator.Persistent);
+    }
+
+    public int this[int x, int y, int z] {
+
+        get {
+            return mapArray[x + mapSize * (y + mapSize * z)];
+        }
+        set {
+            mapArray[x + mapSize * (y + mapSize * z)] = value;
+        }
+
+    }
 }

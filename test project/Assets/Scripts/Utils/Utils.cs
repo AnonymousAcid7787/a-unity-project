@@ -27,6 +27,7 @@ public struct Utils
 /** <summary>
 * Unmanaged struct that acts as a 3D array, but is a flat NativeArray.
 * Use it like a regular 3d array (Ex. array[1, 2, 5])
+* this can't be used in components :(
 * </summary> 
 */
 public struct Flat3DArrayUnmanaged<T> where T : unmanaged {
@@ -35,11 +36,11 @@ public struct Flat3DArrayUnmanaged<T> where T : unmanaged {
     int height;
     int depth;
 
-    public Flat3DArrayUnmanaged(int _width, int _height, int _depth, Allocator allocator) {
+    public Flat3DArrayUnmanaged(int width, int height, int depth, Allocator allocator) {
 
-        width = _width;
-        height = _height;
-        depth = _depth;
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
         
         flatArray = new NativeArray<T>(width*height*depth, allocator);
     }
