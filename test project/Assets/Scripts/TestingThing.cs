@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Physics;
+using Unity.Collections;
 
 public class TestingThing : MonoBehaviour
 {
@@ -18,8 +19,15 @@ public class TestBaker : Baker<TestingThing>
 }
 
 public partial struct TestSystem : ISystem {
-    public void OnCreate(ref SystemState state) {
 
+    public static ChunkMap test;
+
+    public void OnCreate(ref SystemState state) {
+        test = new ChunkMap(10, 10, 10);
+
+        EntityManager manager = state.EntityManager;
+        Entity testEntity = manager.CreateEntity(typeof(TestComponent));
+        manager.AddComponentData(testEntity, new TestComponent{});
     }
 
     public void OnDestroy(ref SystemState state) {
@@ -31,8 +39,13 @@ public partial struct TestSystem : ISystem {
     }
 
     partial struct TestJob : IJobEntity {
-        public void Execute(in Entity entity, in TerrainGeneratorComponent terrainGenCmp) {
-            Debug.Log(entity.ToString());
+        public void Execute(in Entity entity, in TestComponent terrainMap) {
+            Debug.Log(test);
         }
     }
+}
+
+
+public struct TestComponent : IComponentData {
+    
 }
