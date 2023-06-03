@@ -24,7 +24,7 @@ public class TestBaker : Baker<TestingThing>
     public override void Bake(TestingThing authoring)
     {
         AddComponent(GetEntity(TransformUsageFlags.None), new TestComponent {
-            chunkPosition = authoring.chunkPosition,
+            chunkGenerationOrigin = authoring.chunkPosition,
             chunkSize = authoring.chunkSize,
             minHeight = authoring.minHeight,
             maxHeight = authoring.maxHeight,
@@ -37,7 +37,7 @@ public class TestBaker : Baker<TestingThing>
 }
 
 public struct TestComponent : IComponentData {
-    public int3 chunkPosition;
+    public int3 chunkGenerationOrigin;
     public int chunkMapSize;
     public int chunkSize;
     public int minHeight;
@@ -54,7 +54,7 @@ public partial struct TestSystem : ISystem {
     public static ChunkMap test;
 
     public void OnCreate(ref SystemState state) {
-        test = new ChunkMap(10, 10, 10);
+        
     }
 
     public void OnDestroy(ref SystemState state) {
@@ -69,16 +69,17 @@ public partial struct TestSystem : ISystem {
         public void Execute(in Entity entity, in TestComponent cmp) {
             int chunkMapSize = cmp.chunkMapSize;
             int chunkSize = cmp.chunkSize;
-            
-            int[,] noiseGrid = FractalNoiseInt(
-                cmp.chunkPosition.x, cmp.chunkPosition.z,
-                chunkMapSize*chunkSize,chunkMapSize*chunkSize,
+            test = new ChunkMap(
+                chunkMapSize,
+                chunkSize,
+                cmp.chunkGenerationOrigin,
                 cmp.minHeight, cmp.maxHeight,
                 cmp.frequency,
-                cmp.octaves,
                 cmp.lacunarity,
-                cmp.persistence
-            );
+                cmp.octaves,
+                cmp.persistence);
+            
+            //Generate the chunks based on chunk load distance
         }
     }
 

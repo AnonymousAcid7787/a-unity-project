@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Collections;
+using Unity.Mathematics;
 
 /** <summary>
 * A 3d array of all the chunks
@@ -10,27 +11,57 @@ using Unity.Collections;
 */
 public struct ChunkMap {
     
-    int width;
-    int height;
-    int depth;
+    public int3 chunkGenerationOrigin;
+    public int chunkMapSize;
+    public int chunkSize;
+    public int minHeight;
+    public int maxHeight;
+    public float frequency;
+    public float lacunarity;
+    public int octaves;
+    public float persistence;
 
     NativeList<WorldChunk> chunks;
 
-    public ChunkMap(int width, int height, int depth) {
-        this.width = width;
-        this.height = height;
-        this.depth = depth;
+    public ChunkMap(int chunkMapSize, int chunkSize, int3 chunkGenerationOrigin, int minHeight, int maxHeight, float frequency, float lacunarity, int octaves, float persistence) {
+        this.chunkMapSize = chunkMapSize;
+        this.chunkSize = chunkSize;
+        this.chunkGenerationOrigin = chunkGenerationOrigin;
+        this.minHeight = minHeight;
+        this.maxHeight = maxHeight;
+        this.frequency = frequency;
+        this.lacunarity = lacunarity;
+        this.octaves = octaves;
+        this.persistence = persistence;
 
         chunks = new NativeList<WorldChunk>(Allocator.Persistent);
-        chunks.Resize(width*height*depth, NativeArrayOptions.UninitializedMemory);
+        chunks.Resize(ChunkMapArea, NativeArrayOptions.UninitializedMemory);
+    }
+
+    public int ChunkMapArea {
+        get {
+            return chunkMapSize*chunkMapSize*chunkMapSize;
+        }
+    }
+
+    public int ChunkArea {
+        get {
+            return chunkSize*chunkSize*chunkSize;
+        }
+    }
+
+    public int ChunkMapVoxelArea {
+        get {
+            return ChunkMapArea*ChunkArea;
+        }
     }
 
     public WorldChunk this[int x, int y, int z] {
         get {
-            return chunks[x + height * (y + depth * z)];
+            return chunks[x + chunkMapSize * (y + chunkMapSize * z)];
         }
         set {
-            chunks[x + height * (y + depth * z)] = value;
+            chunks[x + chunkMapSize * (y + chunkMapSize * z)] = value;
         }
     }
     
