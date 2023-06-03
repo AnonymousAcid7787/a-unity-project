@@ -9,7 +9,7 @@ using Unity.Mathematics;
 public class TestingThing : MonoBehaviour
 {
     public int3 chunkPosition;
-    public int mapSize = 9;
+    public int chunkMapSize = 2;
     public int chunkSize = 9;
     public int minHeight = 1;
     public int maxHeight = 8;
@@ -38,7 +38,7 @@ public class TestBaker : Baker<TestingThing>
 
 public struct TestComponent : IComponentData {
     public int3 chunkPosition;
-    public int mapSize;
+    public int chunkMapSize;
     public int chunkSize;
     public int minHeight;
     public int maxHeight;
@@ -55,10 +55,6 @@ public partial struct TestSystem : ISystem {
 
     public void OnCreate(ref SystemState state) {
         test = new ChunkMap(10, 10, 10);
-
-        EntityManager manager = state.EntityManager;
-        Entity testEntity = manager.CreateEntity(typeof(TestComponent));
-        manager.AddComponentData(testEntity, new TestComponent{});
     }
 
     public void OnDestroy(ref SystemState state) {
@@ -71,13 +67,18 @@ public partial struct TestSystem : ISystem {
 
     partial struct TestJob : IJobEntity {
         public void Execute(in Entity entity, in TestComponent cmp) {
-            int mapSize = cmp.mapSize;
+            int chunkMapSize = cmp.chunkMapSize;
             int chunkSize = cmp.chunkSize;
+            
             int[,] noiseGrid = FractalNoiseInt(
                 cmp.chunkPosition.x, cmp.chunkPosition.z,
-                (9*9*9)*(9*9*9),(9*9*9)*(9*9*9),
-                0,
-            )
+                chunkMapSize*chunkSize,chunkMapSize*chunkSize,
+                cmp.minHeight, cmp.maxHeight,
+                cmp.frequency,
+                cmp.octaves,
+                cmp.lacunarity,
+                cmp.persistence
+            );
         }
     }
 

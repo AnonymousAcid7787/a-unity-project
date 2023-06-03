@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Collections;
 
 /** <summary>
-* 
+* A 3d array of all the chunks
 * </summary> 
 */
 public struct ChunkMap {
