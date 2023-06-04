@@ -6,6 +6,9 @@ using Unity.Collections;
 using Unity.Mathematics;
 
 public struct WorldManagement {
+
+    public static ChunkMap currentWorldChunks;
+
     public static int[,] FractalNoiseInt(int chunkX, int chunkY, int gridWidth, int gridHeight, int minHeight, int maxHeight, float frequency, int octaves, float lacunarity, float persistence) {
 
 		int[,] grid = new int[gridHeight, gridWidth];
@@ -88,10 +91,21 @@ public struct ChunkMap {
     #endregion Fractal noise parameters
 
     /* Entities that contain the WorldChunk component */
-    NativeList<Entity> chunks;
+    private NativeList<Entity> chunks;
 
-    public ChunkMap(int chunkMapSize, int chunkSize, int3 chunkGenerationOrigin, int minHeight, int maxHeight, float frequency, float lacunarity, int octaves, float persistence) {
-        this.chunkMapSize = chunkMapSize;
+    /* If this chunk map wasn't initialized via constructor, this would be false. */
+    private bool notNull;
+
+    /**
+    * <summary>
+    * When constructed, the chunk map will not have any chunks. <br />
+    * The <see cref="ChunkLoaderISystem"/> will update the current world's ChunkMap (<see cref="WorldManagement.currentWorldChunks"/>)
+    * </summary>
+    */
+    public ChunkMap(int chunkSize, int3 chunkGenerationOrigin, int minHeight, int maxHeight, float frequency, float lacunarity, int octaves, float persistence) {
+        notNull = true;
+
+        this.chunkMapSize = 0;
         this.chunkSize = chunkSize;
         this.chunkGenerationOrigin = chunkGenerationOrigin;
         this.minHeight = minHeight;
@@ -102,7 +116,17 @@ public struct ChunkMap {
         this.persistence = persistence;
 
         chunks = new NativeList<Entity>(Allocator.Persistent);
-        chunks.Resize(ChunkMapArea, NativeArrayOptions.UninitializedMemory);
+    }
+
+    /**
+    * <summary>
+    * This is false when this ChunkMap hasn't been initalized via constructor.
+    * </summary>
+    */
+    public bool NotNull {
+        get {
+            return notNull;
+        }
     }
 
     public int ChunkMapArea {

@@ -14,7 +14,9 @@ public partial struct ChunkLoaderISystem : ISystem {
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state) {
-    
+        if(WorldManagement.currentWorldChunks.ChunkMapArea == 0) {
+            //Create chunks in GameSettings.chunkRenderDistance
+        }
     }
 
     [BurstCompile]

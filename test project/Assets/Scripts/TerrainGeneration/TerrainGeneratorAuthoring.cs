@@ -30,11 +30,10 @@ public class TerrainInitializeBaker : Baker<TerrainInitializeAuthoring>
     public override void Bake(TerrainInitializeAuthoring authoring)
     {
         int chunkSize = authoring.chunkSize;
-		int chunkMapSize = authoring.chunkRenderDistance;
+
 		GameSettings.chunkRenderDistance = authoring.chunkRenderDistance;
 
-        ChunkMap chunkMap = new ChunkMap(
-            chunkMapSize,
+        WorldManagement.currentWorldChunks = new ChunkMap(
             authoring.chunkSize,
 			authoring.chunkGenerationOrigin,
 			authoring.minHeight, authoring.maxHeight,
