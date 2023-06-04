@@ -23,16 +23,16 @@ public class TestBaker : Baker<TestingThing>
 {
     public override void Bake(TestingThing authoring)
     {
-        AddComponent(GetEntity(TransformUsageFlags.None), new TestComponent {
-            chunkGenerationOrigin = authoring.chunkPosition,
-            chunkSize = authoring.chunkSize,
-            minHeight = authoring.minHeight,
-            maxHeight = authoring.maxHeight,
-            frequency = authoring.frequency,
-            lacunarity = authoring.lacunarity,
-            octaves = authoring.octaves,
-            persistence = authoring.persistence,
-        });
+        // AddComponent(GetEntity(TransformUsageFlags.None), new TestComponent {
+        //     chunkGenerationOrigin = authoring.chunkPosition,
+        //     chunkSize = authoring.chunkSize,
+        //     minHeight = authoring.minHeight,
+        //     maxHeight = authoring.maxHeight,
+        //     frequency = authoring.frequency,
+        //     lacunarity = authoring.lacunarity,
+        //     octaves = authoring.octaves,
+        //     persistence = authoring.persistence,
+        // });
     }
 }
 

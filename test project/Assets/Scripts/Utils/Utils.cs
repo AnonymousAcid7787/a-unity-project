@@ -2,12 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 
 public struct Utils
 {
-    //inline this method if possible
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static int Flat2DArrayIndex(int arrayHeight, int x, int y) {
+        return x + arrayHeight*y;
+    }
+    
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T[] Flatten3DArray<T>(T[,,] array3D, int w, int h, int d) {
         T[] array = new T[w*h*d];
@@ -22,12 +26,30 @@ public struct Utils
 
         return array;
     }
+
+
+    /** <summary>
+    * Creates a new flat version of the inputted <paramref name="array"/>.
+    * </summary> 
+    */
+    public static void Flatten2DArray<T>(T[,] array, Allocator allocator, out NativeArray<T> flatArray2D) where T : unmanaged {
+        int width = array.GetLength(0);
+        int height = array.GetLength(1);
+        
+        flatArray2D = new NativeArray<T>(width*height, allocator);
+
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                flatArray2D[x + height*y] = array[x, y];
+            }
+        }
+    }
 }
 
 /** <summary>
-* Unmanaged struct that acts as a 3D array, but is a flat NativeArray.
-* Use it like a regular 3d array (Ex. array[1, 2, 5])
-* this can't be used in components :(
+* Unmanaged struct that acts as a 3D array, but is a flat NativeArray.<br />
+* Use it like a regular 3d array (Ex. array[1, 2, 5])<br />
+* This can't be used in components, so this might be deleted eventually
 * </summary> 
 */
 public struct Flat3DArrayUnmanaged<T> where T : unmanaged {
