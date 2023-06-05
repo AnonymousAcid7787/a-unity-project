@@ -70,7 +70,6 @@ public partial struct TestSystem : ISystem {
             int chunkMapSize = cmp.chunkMapSize;
             int chunkSize = cmp.chunkSize;
             test = new ChunkMap(
-                chunkMapSize,
                 chunkSize,
                 cmp.chunkGenerationOrigin,
                 cmp.minHeight, cmp.maxHeight,

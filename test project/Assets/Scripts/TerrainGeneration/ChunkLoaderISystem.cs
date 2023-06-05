@@ -12,12 +12,12 @@ public partial struct ChunkLoaderISystem : ISystem {
     
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state) {
         if(WorldManagement.currentWorldChunks.ChunkMapArea == 0) {
             //Create chunks in GameSettings.chunkRenderDistance
         }
     }
+    public void TestThing<T>() where T : unmanaged{}
 
     [BurstCompile]
     public void OnDestroy(ref SystemState state) {
