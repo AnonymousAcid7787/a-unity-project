@@ -17,7 +17,6 @@ public partial struct ChunkLoaderISystem : ISystem {
             //Create chunks in GameSettings.chunkRenderDistance
         }
     }
-    public void TestThing<T>() where T : unmanaged{}
 
     [BurstCompile]
     public void OnDestroy(ref SystemState state) {
