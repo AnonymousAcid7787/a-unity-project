@@ -6,8 +6,11 @@ using Unity.Collections;
 using Unity.Mathematics;
 
 public struct WorldManagement {
-
-    public static ChunkMap currentWorldChunks;
+    /** <summary>
+    * <see cref="ChunkMap"/> of all loaded chunks.
+    * </summary> 
+    */
+    public static ChunkMap currentWorldLoadedChunks;
 
     public static int[,] FractalNoiseInt(int chunkX, int chunkY, int gridWidth, int gridHeight, int minHeight, int maxHeight, float frequency, int octaves, float lacunarity, float persistence) {
 
@@ -90,8 +93,12 @@ public struct ChunkMap {
     public float persistence;
     #endregion Fractal noise parameters
 
-    /* Entities that contain the WorldChunk component */
-    private NativeList<Entity> chunks;
+    /** <summary>
+    * The flattened 3D array of all chunks in this map.<br />
+    * Access these voxels properly using the [x,y,z] notation on this ChunkMap object
+    * </summary> 
+    */
+    public NativeList<Entity> chunks;
 
     /* If this chunk map wasn't initialized via constructor, this would be false. */
     private bool notNull;
@@ -170,7 +177,13 @@ public struct WorldChunk : IComponentData {
     int chunkSizeVoxels;
     /* Chunk volume in voxels */
     int chunkVolumeVoxels;
-    NativeArray<Voxel> voxels;
+
+    /** <summary>
+    * The flattened 3D array of voxels in this chunk.<br />
+    * Access these voxels properly using the [x,y,z] notation on this object
+    * </summary> 
+    */
+    public NativeArray<Voxel> voxels;
     
     public WorldChunk(int chunkSizeVoxels) {
         this.chunkSizeVoxels = chunkSizeVoxels;

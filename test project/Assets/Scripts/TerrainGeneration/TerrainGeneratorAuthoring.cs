@@ -35,7 +35,7 @@ public class TerrainInitializeBaker : Baker<TerrainInitializeAuthoring>
 		GameSettings.chunkRenderDistance = authoring.chunkRenderDistance;
         GameSettings.chunkLoadDistance = authoring.chunkLoadDistance;
 
-        WorldManagement.currentWorldChunks = new ChunkMap(
+        WorldManagement.currentWorldLoadedChunks = new ChunkMap(
             authoring.chunkSize,
 			authoring.chunkGenerationOrigin,
 			authoring.minHeight, authoring.maxHeight,

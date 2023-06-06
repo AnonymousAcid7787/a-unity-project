@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Burst;
 using Unity.Transforms;
+using Unity.Collections;
 
 [BurstCompile]
 public partial struct ChunkLoaderISystem : ISystem {
@@ -20,9 +21,12 @@ public partial struct ChunkLoaderISystem : ISystem {
         
         RefRW<LocalTransform> playerTransform = SystemAPI.GetComponentRW<LocalTransform>(SystemAPI.GetSingletonEntity<PlayerCharacterTag>(), true);
         
+        int chunkLoadDistance = GameSettings.chunkLoadDistance;
 
-        /* create chunks in chunk map */
-        
+        /* Loading chunks in chunk map */
+
+        //Clear and resize the chunks list to a cube with GameSettings.chunkLoadDistance size
+        WorldManagement.currentWorldLoadedChunks.chunks.Resize(chunkLoadDistance*chunkLoadDistance*chunkLoadDistance, NativeArrayOptions.UninitializedMemory);
     }
 
     [BurstCompile]
