@@ -165,25 +165,50 @@ public struct ChunkMap {
 * </summary> 
 */
 public struct WorldChunk : IComponentData {
-        
-    int chunkSize;
+    
+    /* Chunk size in voxels */
+    int chunkSizeVoxels;
+    /* Chunk volume in voxels */
+    int chunkVolumeVoxels;
     NativeArray<Voxel> voxels;
     
-    public WorldChunk(int chunkSize) {
-        this.chunkSize = chunkSize;
-        voxels = new NativeArray<Voxel>(chunkSize*chunkSize*chunkSize, Allocator.Persistent);
+    public WorldChunk(int chunkSizeVoxels) {
+        this.chunkSizeVoxels = chunkSizeVoxels;
+        this.chunkVolumeVoxels = chunkSizeVoxels * chunkSizeVoxels*chunkSizeVoxels;
+        voxels = new NativeArray<Voxel>(chunkSizeVoxels*chunkSizeVoxels*chunkSizeVoxels, Allocator.Persistent);
     }
 
     public Voxel this[int x, int y, int z] {
         get {
-            return voxels[x + chunkSize * (y + chunkSize * z)];
+            return voxels[x + chunkSizeVoxels * (y + chunkSizeVoxels * z)];
         }
         set {
-            voxels[x + chunkSize * (y + chunkSize * z)] = value;
+            voxels[x + chunkSizeVoxels * (y + chunkSizeVoxels * z)] = value;
+        }
+    }
+    
+    /** <summary>
+    * Returns chunk size in units
+    * </summary> 
+    */
+    public double ChunkSize {
+        get {
+            return chunkSizeVoxels * Voxel.size;
+        }
+    }
+
+    /** <summary>
+    * Returns chunk volume in units
+    * </summary> 
+    */
+    public double ChunkVolume {
+        get {
+            return chunkVolumeVoxels * Voxel.size;
         }
     }
 }
 
 public struct Voxel {
-
+    public static double size = 0.1;
+    public static double volume = size*size*size;
 }
