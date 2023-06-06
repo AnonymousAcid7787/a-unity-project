@@ -16,6 +16,7 @@ public class TerrainInitializeAuthoring : MonoBehaviour
     public int3 chunkGenerationOrigin;
     public int chunkSize = 9;
 	public int chunkRenderDistance = 1;
+    public int chunkLoadDistance = 2;
 	[Space]
     public int minHeight = 0;
     public int maxHeight = 8;
@@ -32,6 +33,7 @@ public class TerrainInitializeBaker : Baker<TerrainInitializeAuthoring>
         int chunkSize = authoring.chunkSize;
 
 		GameSettings.chunkRenderDistance = authoring.chunkRenderDistance;
+        GameSettings.chunkLoadDistance = authoring.chunkLoadDistance;
 
         WorldManagement.currentWorldChunks = new ChunkMap(
             authoring.chunkSize,
